@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood Flow</title>
+    <link rel="icon" href="images/favicon.png" type="image/png">
+  </head>
+  <body>
+    <header class="header">
+      <div class="header-left">
+        <p class="current-date">Wed, Jul 30</p>
+      </div>
+      <div class="header-right">
+        <button type="button" class="theme-toggle">🌙</button>
+      </div>
+    </header>
+    
+    <main>
+      <h1 class="mood-title">How do you feel today?</h1>
+
+      <div class="mood">
+        <div class="mood-grid">
+          <button type="button" class="mood-card">😎</button>
+          <button type="button" class="mood-card">😴</button>
+          <button type="button" class="mood-card">😡</button>
+          <button type="button" class="mood-card">😌</button>
+          <button type="button" class="mood-card">🤔</button>
+          <button type="button" class="mood-card">😁</button>
+        </div>
+
+        <button class="mood_start" disabled>Start the day</button>
+      </div>
+    </main>
+
+    <script type="module" src="scripts/main.js"></script>
+  </body>
+</html>
