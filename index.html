@@ -5,31 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mood Flow</title>
     <link rel="icon" href="images/favicon.png" type="image/png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="styles/pages/main.css">
   </head>
   <body>
     <header class="header">
       <div class="header-left">
-        <p class="current-date">Wed, Jul 30</p>
+        <p class="current-date">Wednesday, Jul 30</p>
       </div>
       <div class="header-right">
-        <button type="button" class="theme-toggle">🌙</button>
+        <button type="button" class="btn btn-secondary theme-toggle-btn">
+          <i class="bi bi-moon-fill"></i>
+        </button>
       </div>
     </header>
     
-    <main>
+    <main class="content">
       <h1 class="mood-title">How do you feel today?</h1>
 
       <div class="mood">
         <div class="mood-grid">
-          <button type="button" class="mood-card">😎</button>
-          <button type="button" class="mood-card">😴</button>
-          <button type="button" class="mood-card">😡</button>
-          <button type="button" class="mood-card">😌</button>
-          <button type="button" class="mood-card">🤔</button>
-          <button type="button" class="mood-card">😁</button>
+          <button type="button" class="btn btn-secondary mood-card">
+            <img class="mood-icon" src="images/grinning-face.png">
+          </button>
+          <button type="button" class="btn btn-secondary mood-card">
+            <img class="mood-icon" src="images/nerd-face.png">
+          </button>
+          <button type="button" class="btn btn-secondary mood-card">
+            <img class="mood-icon" src="images/face-with-symbols-on-mouth.png">
+          </button>
+          <button type="button" class="btn btn-secondary mood-card">
+            <img class="mood-icon" src="images/smiling-face-with-halo.png">
+          </button>
+          <button type="button" class="btn btn-secondary mood-card">
+            <img class="mood-icon" src="images/smiling-face-with-sunglasses.png">
+          </button>
+          <button type="button" class="btn btn-secondary mood-card">
+            <img class="mood-icon" src="images/loudly-crying-face.png">
+          </button>
         </div>
-
-        <button class="mood_start" disabled>Start the day</button>
+        <button class="btn btn-secondary mood-start">Start the day!</button>
       </div>
     </main>
 
