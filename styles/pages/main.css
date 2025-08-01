@@ -93,6 +93,10 @@ body {
   justify-content: center;
 }
 
+.mood-card.active {
+  box-shadow: 0 0 8px rgba(24, 23, 23, 0.7);
+}
+
 .mood-icon {
   width: 60%;
   height: auto;
@@ -100,6 +104,10 @@ body {
 }
 
 /* Start button */
+
+.hidden {
+  display: none !important;
+}
 
 .mood-start {
   margin: 1.7rem;

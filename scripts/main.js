@@ -1,5 +1,45 @@
 import {getMood} from './utils/getMood.js';
 import {getRandomItem} from './utils/getRandomItem.js';
+import 'https://unpkg.com/dayjs@1.11.10/dayjs.min.js';
+
+// save the current date
+const today = dayjs().format('dddd, MMM D');
+
+let selectedMood = null;
+
+const moodButtons = document.querySelectorAll('.mood-card');
+const startButton = document.querySelector('.mood-start');
+
+// hide start button while loading the page
+startButton.classList.add('hidden');
+
+// emoji button listener
+moodButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    
+    // save the user choice
+    selectedMood = button.dataset.mood;
+
+    // show start button
+    startButton.classList.remove('hidden');
+
+    // update visual state
+     moodButtons.forEach(button => button.classList.remove('active'));
+     button.classList.add('active');
+  });
+});
+
+// start button listener
+startButton.addEventListener('click', () => {
+  if (!selectedMood) {
+    console.log("Choose the mood first.");
+    return;
+  }
+
+  // create the card
+  const card = createCard(selectedMood);
+  console.log(card);
+});
 
 function createCard(moodId) {
   const moodObject = getMood(moodId);
@@ -9,24 +49,15 @@ function createCard(moodId) {
     return null;
   }
 
+  const mood = moodObject.id;
+
   const message = getRandomItem(moodObject.messages);
 
   const track = getRandomItem(moodObject.tracks);
 
   return {
+    mood,
     message,
     track
   };
 }
-
-const moodButtons = document.querySelectorAll('.mood-card');
-
-moodButtons.forEach((button) => {
-  button.addEventListener('click', () => {
-    const chosenMood = button.dataset.mood;
-    const card = createCard(chosenMood);
-    if (card) {
-      console.log(card);
-    }
-  });
-});
