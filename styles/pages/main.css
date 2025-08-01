@@ -31,6 +31,18 @@ body {
   font-size: 1.2rem;
 }
 
+.header-middle {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.current-location {
+  margin: 0;
+  font-weight: 400;
+  font-size: 1.2rem;
+}
+
 .theme-toggle-btn {
   height: 40px;
   width: 40px;

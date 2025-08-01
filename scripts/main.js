@@ -1,10 +1,24 @@
 import {getMood} from './utils/getMood.js';
 import {getRandomItem} from './utils/getRandomItem.js';
+import { getLocation } from './utils/getLocation.js';
 import 'https://unpkg.com/dayjs@1.11.10/dayjs.min.js';
 
-// save the current date
+// Location
+const cachedCity = localStorage.getItem("city");
+const locationElement = document.querySelector(".current-location");
+
+// display location
+if (cachedCity) {
+  locationElement.textContent = cachedCity;
+} else {
+  locationElement.textContent = "Loading...";
+  getLocation();
+}
+
+// Date
 const today = dayjs().format('dddd, MMM D');
 
+// Card 
 let selectedMood = null;
 
 const moodButtons = document.querySelectorAll('.mood-card');
@@ -16,7 +30,7 @@ startButton.classList.add('hidden');
 // emoji button listener
 moodButtons.forEach(button => {
   button.addEventListener('click', () => {
-    
+
     // save the user choice
     selectedMood = button.dataset.mood;
 
