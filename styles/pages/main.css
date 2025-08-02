@@ -1,0 +1,132 @@
+/* Fonts */
+
+@font-face {
+  font-family: "SF Pro Rounded";
+  src: url("../../fonts/SF-Pro-Rounded-Regular.otf") format("opentype");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "SF Pro Rounded";
+  src: url("../../fonts/SF-Pro-Rounded-Medium.otf") format("opentype");
+  font-weight: 500;
+}
+
+body {
+  font-family: "SF Pro Rounded", "Segoe UI", Helvetica, Arial;
+}
+
+/* Header */
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+}
+
+.current-date {
+  margin: 0;
+  font-weight: 400;
+  font-size: 1.2rem;
+}
+
+.header-middle {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.current-location {
+  margin: 0;
+  font-weight: 400;
+  font-size: 1.2rem;
+}
+
+.theme-toggle-btn {
+  height: 40px;
+  width: 40px;
+  border: none;
+  border-radius: 50%;
+  background-color: rgb(205, 205, 205);
+}
+
+/* Main */
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.mood-title {
+  font-weight: 500;
+  padding: 1rem;
+}
+
+.mood {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Grid */
+
+.mood-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 125px);
+  gap: 1rem;
+  justify-content: center;
+}
+
+@media (max-width: 1024px) {
+  .mood-grid {
+    grid-template-columns: repeat(3, 125px);
+  }
+}
+
+@media (max-width: 600px) {
+  .mood-grid {
+    grid-template-columns: repeat(2, 125px);
+  }
+}
+
+/* Cards */
+
+.mood-card {
+  width: 125px;
+  height: 125px;
+  background-color: rgb(205, 205, 205);
+  border: none;
+  border-radius: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mood-card.active {
+  box-shadow: 0 0 8px rgba(24, 23, 23, 0.7);
+}
+
+.mood-icon {
+  width: 60%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Start button */
+
+.hidden {
+  display: none !important;
+}
+
+.mood-start {
+  margin: 1.7rem;
+  padding: 0.6rem 1.2rem;
+  font-size: 1.1rem;
+  background-color: rgb(205, 205, 205);
+  color: rgb(25, 25, 25);
+  border: none;
+  border-radius: 15px;
+}
