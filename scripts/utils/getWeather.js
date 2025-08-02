@@ -26,5 +26,5 @@ export async function getWeather() {
   const weatherCode = data.current_weather.weathercode;
   const weatherDescription = getWeatherDescription(weatherCode);
 
-  return { temperatureCelsius, weatherDescription };
+  return { temperatureCelsius, weatherDescription, weatherCode };
 }

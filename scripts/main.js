@@ -4,6 +4,9 @@ import {getWeather} from './utils/getWeather.js';
 import {getCity} from './utils/location.js';
 import 'https://unpkg.com/dayjs@1.11.10/dayjs.min.js';
 
+// load page first
+loadPage();
+
 // Location
 const cachedCity = localStorage.getItem("city");
 const locationElement = document.querySelector(".current-location");
@@ -15,12 +18,6 @@ if (cachedCity) {
   locationElement.textContent = "Loading...";
   getCity();
 }
-
-// Weather
-getWeather().then(( { temperatureCelsius, weatherDescription }) => {
-  console.log(`${temperatureCelsius} \u2103`);
-  console.log(weatherDescription);
-});
 
 // Date
 const dateElement = document.querySelector(".current-date");
@@ -52,6 +49,27 @@ moodButtons.forEach(button => {
   });
 });
 
+// Weather
+
+// create empty object to store weather data
+let weatherData = {
+  temperatureCelsius: null,
+  weatherDescription: null,
+  weatherCode: null
+};
+
+async function initWeather() {
+  const { temperatureCelsius, weatherDescription, weatherCode } = await getWeather();
+
+  // save weather data
+  weatherData = { temperatureCelsius, weatherDescription, weatherCode};
+
+  console.log(`${temperatureCelsius} \u2103`);
+  console.log(weatherDescription);
+  console.log(weatherCode);
+}
+initWeather();
+
 // start button listener
 startButton.addEventListener('click', () => {
   if (!selectedMood) {
@@ -60,8 +78,11 @@ startButton.addEventListener('click', () => {
   }
 
   // create the card
-  const card = createCard(selectedMood);
-  console.log(card);
+  const cardInfo = createCard(selectedMood);
+  console.log(cardInfo);
+
+  // call this function to prepare card data
+  generateCard(cardInfo, weatherData);
 });
 
 function createCard(moodId) {
@@ -78,9 +99,91 @@ function createCard(moodId) {
 
   const track = getRandomItem(moodObject.tracks);
 
-  return {
-    mood,
-    message,
-    track
-  };
+  return { mood, message, track };
+}
+
+// generate card itself
+function generateCard(cardInfo, weatherData) {
+  const { temperatureCelsius, weatherDescription } = weatherData;
+  const { message, track } = cardInfo;
+
+  const cardElement = document.querySelector('.result-card');
+
+  const html = `
+    <div class="current-date-card">
+      ${today}
+    </div>
+
+    <div class="result-weather">
+      It's ${temperatureCelsius} \u2103 now. ${weatherDescription}.
+    </div>
+
+    <div class="result-cover">
+      <img class="cover"
+        src="${track.cover}"
+        class="img-fluid"
+      >
+    </div>
+
+    <div class="result-title">
+      ${track.title}
+    </div>
+
+    <div class="result-artist">
+      ${track.artist}
+    </div>
+
+    <div class="result-message">
+      ${message}
+    </div>
+  `;
+
+  cardElement.innerHTML = html;
+}
+
+// generate the HTML for whole page except header
+function loadPage() {
+  const contentElement = document.querySelector('.content');
+
+  const html = `
+    <h1 class="mood-title">How do you feel today?</h1>
+
+    <div class="mood">
+      <div class="mood-grid">
+        <button type="button"
+                class="btn btn-secondary mood-card"
+                data-mood="happy">
+          <img class="mood-icon" src="images/grinning-face.png">
+        </button>
+        <button type="button" 
+                class="btn btn-secondary mood-card"
+                data-mood="nerdy">
+          <img class="mood-icon" src="images/nerd-face.png">
+        </button>
+        <button type="button" 
+                class="btn btn-secondary mood-card"
+                data-mood="angry">
+          <img class="mood-icon" src="images/face-with-symbols-on-mouth.png">
+        </button>
+        <button type="button" 
+                class="btn btn-secondary mood-card"
+                data-mood="peaceful">
+          <img class="mood-icon" src="images/smiling-face-with-halo.png">
+        </button>
+        <button type="button" 
+                class="btn btn-secondary mood-card"
+                data-mood="cool">
+          <img class="mood-icon" src="images/smiling-face-with-sunglasses.png">
+        </button>
+        <button type="button" 
+                class="btn btn-secondary mood-card"
+                data-mood="emotional">
+          <img class="mood-icon" src="images/loudly-crying-face.png">
+        </button>
+      </div>
+      <button class="btn btn-secondary mood-start hidden">Start the day!</button>
+    </div>
+  `;
+
+  contentElement.innerHTML = html;
 }

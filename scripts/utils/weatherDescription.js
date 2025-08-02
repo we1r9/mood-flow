@@ -33,7 +33,9 @@ export const weatherCodeMap = {
   85: 'Light snow showers',
   86: 'Heavy snow showers',
 
-  95: 'Thunderstorm'
+  95: 'Thunderstorm',
+  96: 'Thunderstorm',
+  97: 'Thunderstorm'
 };
 
 // returns weather description string based on numeric weather code
