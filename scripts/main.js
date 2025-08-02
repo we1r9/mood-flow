@@ -1,6 +1,6 @@
 import {getMood} from './utils/getMood.js';
 import {getRandomItem} from './utils/getRandomItem.js';
-import { getLocation } from './utils/getLocation.js';
+import {getCity} from './utils/location.js';
 import 'https://unpkg.com/dayjs@1.11.10/dayjs.min.js';
 
 // Location
@@ -12,11 +12,13 @@ if (cachedCity) {
   locationElement.textContent = cachedCity;
 } else {
   locationElement.textContent = "Loading...";
-  getLocation();
+  getCity();
 }
 
 // Date
-const today = dayjs().format('dddd, MMM D');
+const dateElement = document.querySelector(".current-date");
+const today = dayjs().format('ddd, MMM D');
+dateElement.textContent = today;
 
 // Card 
 let selectedMood = null;
