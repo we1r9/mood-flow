@@ -1,5 +1,6 @@
 import {getMood} from './utils/getMood.js';
 import {getRandomItem} from './utils/getRandomItem.js';
+import {getWeather} from './utils/getWeather.js';
 import {getCity} from './utils/location.js';
 import 'https://unpkg.com/dayjs@1.11.10/dayjs.min.js';
 
@@ -14,6 +15,12 @@ if (cachedCity) {
   locationElement.textContent = "Loading...";
   getCity();
 }
+
+// Weather
+getWeather().then(( { temperatureCelsius, weatherDescription }) => {
+  console.log(`${temperatureCelsius} \u2103`);
+  console.log(weatherDescription);
+});
 
 // Date
 const dateElement = document.querySelector(".current-date");
