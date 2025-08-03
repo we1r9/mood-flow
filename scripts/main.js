@@ -1,151 +1,71 @@
-import {getMood} from './utils/getMood.js';
-import {getRandomItem} from './utils/getRandomItem.js';
-import {getWeather} from './utils/getWeather.js';
-import {getCity} from './utils/location.js';
+// import utilities for populating header (city & date)
+import { getCity } from './utils/location.js';
 import 'https://unpkg.com/dayjs@1.11.10/dayjs.min.js';
+
+// init city and date for header
+function initHeader() {
+  // city: get from localStorage or request
+  const cachedCity = localStorage.getItem('city');
+  const locationElement = document.querySelector('.current-location');
+
+  if (cachedCity) {
+    locationElement.textContent = cachedCity;
+  } else {
+    locationElement.textContent = 'Loading...';
+    getCity(); // updates .current-location and writes to localStorage
+  }
+
+  // data: format via dayjs
+  const dateElement = document.querySelector(".current-date");
+  dateElement.textContent = dayjs().format('ddd, MMM D');
+}
+
+// call after imports
+initHeader();
 
 // load page first
 loadPage();
 
-// Location
-const cachedCity = localStorage.getItem("city");
-const locationElement = document.querySelector(".current-location");
-
-// display location
-if (cachedCity) {
-  locationElement.textContent = cachedCity;
-} else {
-  locationElement.textContent = "Loading...";
-  getCity();
-}
-
-// Date
-const dateElement = document.querySelector(".current-date");
-const today = dayjs().format('ddd, MMM D');
-dateElement.textContent = today;
-
-// Card 
+// mood selection state & elements
 let selectedMood = null;
-
 const moodButtons = document.querySelectorAll('.mood-card');
 const startButton = document.querySelector('.mood-start');
 
-// hide start button while loading the page
+// initially hide start button
 startButton.classList.add('hidden');
 
-// emoji button listener
+// add click listeners to each mood button
 moodButtons.forEach(button => {
   button.addEventListener('click', () => {
 
-    // save the user choice
+    // save the selected mood from data attribute
     selectedMood = button.dataset.mood;
 
-    // show start button
+    // unhide the start button
     startButton.classList.remove('hidden');
 
-    // update visual state
+    // visually mark only this button as active
      moodButtons.forEach(button => button.classList.remove('active'));
      button.classList.add('active');
   });
 });
 
-// Weather
-
-// create empty object to store weather data
-let weatherData = {
-  temperatureCelsius: null,
-  weatherDescription: null,
-  weatherCode: null
-};
-
-async function initWeather() {
-  const { temperatureCelsius, weatherDescription, weatherCode } = await getWeather();
-
-  // save weather data
-  weatherData = { temperatureCelsius, weatherDescription, weatherCode};
-
-  console.log(`${temperatureCelsius} \u2103`);
-  console.log(weatherDescription);
-  console.log(weatherCode);
-}
-initWeather();
-
-// start button listener
+// start button click handler: check if the mood is selected, go to the result page with mood parameter
 startButton.addEventListener('click', () => {
   if (!selectedMood) {
-    console.log("Choose the mood first.");
+    console.warn('Please select the mood before starting.');
     return;
   }
 
-  // create the card
-  const cardInfo = createCard(selectedMood);
-  console.log(cardInfo);
-
-  // call this function to prepare card data
-  generateCard(cardInfo, weatherData);
+  // redirect to result page with the chosen mood in query string
+  window.location.href = `result.html?mood=${selectedMood}`;
 });
 
-function createCard(moodId) {
-  const moodObject = getMood(moodId);
-
-  if(!moodObject) {
-    console.warn(`Mood "${moodId}" not found.`);
-    return null;
-  }
-
-  const mood = moodObject.id;
-
-  const message = getRandomItem(moodObject.messages);
-
-  const track = getRandomItem(moodObject.tracks);
-
-  return { mood, message, track };
-}
-
-// generate card itself
-function generateCard(cardInfo, weatherData) {
-  const { temperatureCelsius, weatherDescription } = weatherData;
-  const { message, track } = cardInfo;
-
-  const cardElement = document.querySelector('.result-card');
-
-  const html = `
-    <div class="current-date-card">
-      ${today}
-    </div>
-
-    <div class="result-weather">
-      It's ${temperatureCelsius} \u2103 now. ${weatherDescription}.
-    </div>
-
-    <div class="result-cover">
-      <img class="cover"
-        src="${track.cover}"
-        class="img-fluid"
-      >
-    </div>
-
-    <div class="result-title">
-      ${track.title}
-    </div>
-
-    <div class="result-artist">
-      ${track.artist}
-    </div>
-
-    <div class="result-message">
-      ${message}
-    </div>
-  `;
-
-  cardElement.innerHTML = html;
-}
-
-// generate the HTML for whole page except header
+// render the main mood-selection interface into .content: page title, six mood buttons with data-mood attributes and hidden "Start the day!" button
 function loadPage() {
   const contentElement = document.querySelector('.content');
 
-  const html = `
+  contentElement.innerHTML = `
     <h1 class="mood-title">How do you feel today?</h1>
 
     <div class="mood">
@@ -181,9 +101,9 @@ function loadPage() {
           <img class="mood-icon" src="images/loudly-crying-face.png">
         </button>
       </div>
+
+      <!-- stays hidden until a mood is selected -->
       <button class="btn btn-secondary mood-start hidden">Start the day!</button>
     </div>
   `;
-
-  contentElement.innerHTML = html;
 }
