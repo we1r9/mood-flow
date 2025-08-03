@@ -1,10 +1,25 @@
+const COORDS_KEY = 'cachedCoordinates';
+
 // returns Promise which resolves ({ latitude, longitude }) or rejects (reject(Error))
 export function getCoordinates() {
-  return new Promise((resolve, reject) => {
+  // try to get coordinates from localStorage if exists
+  const cached = localStorage.getItem(COORDS_KEY);
+  if (cached) {
+    try {
+
+      // parse and return Promise with coordinates
+      return Promise.resolve(JSON.parse(cached));
+    } catch {
+      localStorage.removeItem(COORDS_KEY);
+    } 
+  }
+
+  // otherwise make a request to browser to get coordinates
+   return new Promise((resolve, reject) => {
 
     // check geo support
-    if (!("geolocation" in navigator)) {
-      reject(new Error("Geolocation not supported"));
+    if (!('geolocation' in navigator)) {
+      reject(new Error('Geolocation not supported'));
       return;
     }
 
@@ -13,9 +28,14 @@ export function getCoordinates() {
 
       // (onSuccess)
       (position) => {
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
-        resolve({ latitude, longitude });
+        const coords = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+        };
+
+        //save coordinates to localStorage
+        localStorage.setItem(COORDS_KEY, JSON.stringify(coords));
+        resolve(coords);
       },
 
       // (onError)
@@ -27,7 +47,7 @@ export function getCoordinates() {
 }
 
 // find element to display result
-const locationElement = document.querySelector(".current-location");
+const locationElement = document.querySelector('.current-location');
 
 // gets coordinates with getCoordinates, makes fetch request to Nominatim, updates the DOM and saves to localStorage
 export async function getCity() {
@@ -45,16 +65,16 @@ export async function getCity() {
     const data = await response.json();
 
     // save short-circuit evaluation result
-    const city = data.address.city || data.address.town || data.address.village || "Unknown";
+    const city = data.address.city || data.address.town || data.address.village || 'Unknown';
 
     // update DOM and save to localStorage
     locationElement.textContent = city;
-    localStorage.setItem("city", city);
+    localStorage.setItem('city', city);
 
-    console.log("City:", city);
+    console.log('City:', city);
 
   } catch (error) {
-    console.error("Reverse-geocoding failed: ", error);
+    console.error('Reverse-geocoding failed:', error);
     locationElement.textContent = '';
   }
 }
