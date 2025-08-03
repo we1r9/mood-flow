@@ -2,6 +2,8 @@
 import { getCity } from './utils/location.js';
 import 'https://unpkg.com/dayjs@1.11.10/dayjs.min.js';
 import { initModalWindow } from './utils/modal-window.js';
+import { titles } from '../data/titles.js';
+import { getRandomItem } from './utils/getRandomItem.js'
 
 // initialize main page logic: layout, mood selection, header setup, and geolocation modal handling
 document.addEventListener('DOMContentLoaded', () => {
@@ -79,8 +81,13 @@ function initMoodSelection() {
 function loadPage() {
   const contentElement = document.querySelector('.content');
 
+  // generate random title
+  const pageTitle = getRandomItem(titles);
+
   contentElement.innerHTML = `
-    <h1 class="mood-title">How do you feel today?</h1>
+    <h1 class="mood-title">
+      ${pageTitle}
+    </h1>
 
     <div class="mood">
       <div class="mood-grid">
