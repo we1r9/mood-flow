@@ -28,12 +28,22 @@ if (cachedCity) {
 // request current weather via getWeather() and return weatherData object
 async function fetchWeatherData() {
   try {
-    const { temperatureCelsius, weatherDescription, weatherCode } = await getWeather();
+    const { 
+      temperatureCelsius, 
+      weatherDescription, 
+      weatherCode, 
+      observationTime 
+    } = await getWeather();
 
     // debug logs
-    console.log(`${temperatureCelsius} \u2103`, weatherDescription, weatherCode);
+    console.log(`${temperatureCelsius} \u2103`, weatherDescription, weatherCode, observationTime);
 
-    return { temperatureCelsius, weatherDescription, weatherCode };
+    return { 
+      temperatureCelsius, 
+      weatherDescription, 
+      weatherCode, 
+      observationTime 
+    };
 
   } catch (error) {
     console.error('Failed to load weather data:', error);
@@ -42,7 +52,8 @@ async function fetchWeatherData() {
     return {
       temperatureCelsius: null,
       weatherDescription: 'Unavailable',
-      weatherCode: null
+      weatherCode: null,
+      observationTime: null
     };
   }
 }
