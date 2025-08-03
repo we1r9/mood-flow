@@ -52,7 +52,6 @@ const locationElement = document.querySelector('.current-location');
 // gets coordinates with getCoordinates, makes fetch request to Nominatim, updates the DOM and saves to localStorage
 export async function getCity() {
   try {
-
     // waiting for coordinates
     const { latitude, longitude } = await getCoordinates();
 
@@ -75,6 +74,11 @@ export async function getCity() {
 
   } catch (error) {
     console.error('Reverse-geocoding failed:', error);
+
+    // if user explicitly denied geolocation in browser prompt
+    if (error.code === 1) {
+      localStorage.setItem('geoDenied', 'true');
+    }
     locationElement.textContent = '';
   }
 }

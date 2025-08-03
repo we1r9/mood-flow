@@ -18,37 +18,55 @@ if (!mood) {
 const locationElement = document.querySelector(".current-location");
 const cachedCity = localStorage.getItem("city");
 
+// check geolocation permission status saved from modal interaction
+const denied = localStorage.getItem('geoDenied');
+const shown = localStorage.getItem('modalShown');
+
+// display city name based on cached data or geolocation permission status
 if (cachedCity) {
   locationElement.textContent = cachedCity;
+} else if (denied) {
+  locationElement.textContent = '';
+} else if (!shown) {
+  locationElement.textContent = '';
 } else {
-  locationElement.textContent = "Loading...";
+  locationElement.textContent = 'Loading';
   getCity();
 }
 
 // request current weather via getWeather() and return weatherData object
 async function fetchWeatherData() {
-  try {
-    const { 
-      temperatureCelsius, 
-      weatherDescription, 
-      weatherCode, 
-      observationTime 
-    } = await getWeather();
+  if (!denied) {
+    try {
+      const { 
+        temperatureCelsius, 
+        weatherDescription, 
+        weatherCode, 
+        observationTime 
+      } = await getWeather();
 
-    // debug logs
-    console.log(`${temperatureCelsius} \u2103`, weatherDescription, weatherCode, observationTime);
+      // debug logs
+      console.log(`${temperatureCelsius} \u2103`, weatherDescription, weatherCode, observationTime);
 
-    return { 
-      temperatureCelsius, 
-      weatherDescription, 
-      weatherCode, 
-      observationTime 
-    };
+      return { 
+        temperatureCelsius, 
+        weatherDescription, 
+        weatherCode, 
+        observationTime 
+      };
 
-  } catch (error) {
-    console.error('Failed to load weather data:', error);
+    } catch (error) {
+      console.error('Failed to load weather data:', error);
 
-    // return error values
+      // return error values
+      return {
+        temperatureCelsius: null,
+        weatherDescription: 'Unavailable',
+        weatherCode: null,
+        observationTime: null
+      };
+    }
+  } else {
     return {
       temperatureCelsius: null,
       weatherDescription: 'Unavailable',
@@ -97,36 +115,68 @@ function renderCard(cardData, weatherData) {
   } = weatherData;
   const { message, track } = cardData;
 
-  // build HTML
-  const html = `
-    <div class="current-date-card">
-      ${today}
-    </div>
+  // render result card HTML with or without weather block based on geolocation permission
+  if (!denied) {
+    // user allowed geolocation — show weather in result card
+    const html = `
+      <div class="current-date-card">
+        ${today}
+      </div>
 
-    <div class="result-weather">
-      It's ${temperatureCelsius} \u2103 now. ${weatherDescription}.
-    </div>
+      <div class="result-weather">
+        It's ${temperatureCelsius} \u2103 now. ${weatherDescription}.
+      </div>
 
-    <div class="result-cover">
-      <img class="cover"
-        src="${track.cover}"
-      >
-    </div>
+      <div class="result-cover">
+        <img class="cover"
+          src="${track.cover}"
+        >
+      </div>
 
-    <div class="result-title">
-      ${track.title}
-    </div>
+      <div class="result-title">
+        ${track.title}
+      </div>
 
-    <div class="result-artist">
-      ${track.artist}
-    </div>
+      <div class="result-artist">
+        ${track.artist}
+      </div>
 
-    <div class="result-message">
-      ${message}
-    </div>
-  `;
+      <div class="result-message">
+        ${message}
+      </div>
+    `;
 
-  // insert into the page
-  const cardElement = document.querySelector('.result-card');
-  cardElement.innerHTML = html;
+    // insert into the page
+    const cardElement = document.querySelector('.result-card');
+    cardElement.innerHTML = html;
+  } else {
+    // geolocation denied — render result card without weather
+    const html = `
+      <div class="current-date-card">
+        ${today}
+      </div>
+
+      <div class="result-cover">
+        <img class="cover"
+          src="${track.cover}"
+        >
+      </div>
+
+      <div class="result-title">
+        ${track.title}
+      </div>
+
+      <div class="result-artist">
+        ${track.artist}
+      </div>
+
+      <div class="result-message">
+        ${message}
+      </div>
+    `;
+
+    // insert into the page
+    const cardElement = document.querySelector('.result-card');
+    cardElement.innerHTML = html;
+  }
 }
