@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="styles/pages/main.css">
     <link rel="stylesheet" href="styles/pages/card.css">
+    <link rel="stylesheet" href="styles/pages/modal-window.css">
   </head>
   <body>
     <header class="header">
@@ -27,8 +28,15 @@
     
     <main class="content"></main>
 
-    <div class="result-card"></div>
+    <div class="modal hidden">
+      <div class="modal-content">
+        <button class="decline-button">X</button>
+        <p>To show the weather in your city, allow access to geolocation. We do not store your data.</p>
+        <button class="accept-button">Allow</button>
+      </div>
+    </div>
 
     <script type="module" src="scripts/main.js"></script>
+    <script type="module" src="scripts/utils/modal-window.js"></script>
   </body>
 </html>
