@@ -119,30 +119,36 @@ function renderCard(cardData, weatherData) {
   if (!denied) {
     // user allowed geolocation — show weather in result card
     const html = `
-      <div class="current-date-card">
-        ${today}
-      </div>
+      <div class="card-wrapper">
+        <div class="card-content blurred">
+          <div class="current-date-card">
+            ${today}
+          </div>
 
-      <div class="result-weather">
-        It's ${temperatureCelsius} \u2103 now. ${weatherDescription}.
-      </div>
+          <div class="result-weather">
+            It's ${temperatureCelsius} \u2103 now. ${weatherDescription}.
+          </div>
 
-      <div class="result-cover">
-        <img class="cover"
-          src="${track.cover}"
-        >
-      </div>
+          <div class="result-cover">
+            <img class="cover"
+              src="${track.cover}"
+            >
+          </div>
 
-      <div class="result-title">
-        ${track.title}
-      </div>
+          <div class="result-title">
+            ${track.title}
+          </div>
 
-      <div class="result-artist">
-        ${track.artist}
-      </div>
+          <div class="result-artist">
+            ${track.artist}
+          </div>
 
-      <div class="result-message">
-        ${message}
+          <div class="result-message">
+            ${message}
+          </div>
+        </div>
+
+        <button class="btn btn-secondary open-card-button">Open card</button>
       </div>
     `;
 
@@ -152,26 +158,32 @@ function renderCard(cardData, weatherData) {
   } else {
     // geolocation denied — render result card without weather
     const html = `
-      <div class="current-date-card">
-        ${today}
-      </div>
+      <div class="card-wrapper">
+        <div class="card-content blurred">
+          <div class="current-date-card">
+            ${today}
+          </div>
 
-      <div class="result-cover">
-        <img class="cover"
-          src="${track.cover}"
-        >
-      </div>
+          <div class="result-cover">
+            <img class="cover"
+              src="${track.cover}"
+            >
+          </div>
 
-      <div class="result-title">
-        ${track.title}
-      </div>
+          <div class="result-title">
+            ${track.title}
+          </div>
 
-      <div class="result-artist">
-        ${track.artist}
-      </div>
+          <div class="result-artist">
+            ${track.artist}
+          </div>
 
-      <div class="result-message">
-        ${message}
+          <div class="result-message">
+            ${message}
+          </div>
+        </div>
+
+        <button class="btn btn-secondary open-card-button">Open card</button>
       </div>
     `;
 
@@ -180,3 +192,12 @@ function renderCard(cardData, weatherData) {
     cardElement.innerHTML = html;
   }
 }
+
+const openCardButton = document.querySelector('.open-card-button');
+const wrapper = document.querySelector('.card-content');
+
+openCardButton.addEventListener('click', () => {
+  wrapper.classList.remove('blurred');
+
+  openCardButton.style.display = 'none';
+});
