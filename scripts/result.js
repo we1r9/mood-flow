@@ -35,14 +35,18 @@ import 'https://unpkg.com/dayjs@1.11.10/dayjs.min.js';
   const savedKey = sessionStorage.getItem(cacheKey);
   if (savedKey) {
     const { cardData, weatherData } = JSON.parse(savedKey);
-    return renderCard(cardData, weatherData, denied);
+    renderCard(cardData, weatherData, denied, cacheKey);
+    return;
   } 
+
+  sessionStorage.removeItem(cacheKey + '_opened');
 
   // load current weather and store it in weatherData
   const weatherData = await fetchWeatherData();
 
   // generate card data
   const cardData = prepareCardData(mood);
+
   if (!cardData) {
     return window.location.href = 'index.html';
   }
@@ -54,7 +58,7 @@ import 'https://unpkg.com/dayjs@1.11.10/dayjs.min.js';
   }));
 
   // render card itself
-  renderCard(cardData, weatherData, denied);
+  renderCard(cardData, weatherData, denied, cacheKey);
 
   // request current weather via getWeather() and return weatherData object
   async function fetchWeatherData() {
@@ -115,7 +119,7 @@ import 'https://unpkg.com/dayjs@1.11.10/dayjs.min.js';
 })();
 
 // render the mood result card into the DOM
-function renderCard(cardData, weatherData, denied) {
+function renderCard(cardData, weatherData, denied, cacheKey) {
   // prepare data with sensible defaults 
   const today = dayjs().format('ddd, MMM D');
   const { 
@@ -169,9 +173,24 @@ function renderCard(cardData, weatherData, denied) {
     const openCardButton = document.querySelector('.open-card-button');
     const wrapper = document.querySelector('.card-content');
 
-    openCardButton.addEventListener('click', () => {
+    // check if this mood card has been opened before
+    const opened = sessionStorage.getItem(cacheKey + '_opened') === 'true';
+
+    // if the card has already been opened before, immediately remove the blur and hide the button
+    if (opened) {
       wrapper.classList.remove('blurred');
       openCardButton.style.display = 'none';
+    }
+
+    // attach a handler to the "Open card" button
+    openCardButton.addEventListener('click', () => {
+
+      // remove blur and hide the button
+      wrapper.classList.remove('blurred');
+      openCardButton.style.display = 'none';
+
+      // save the flag in sessionStorage so that the card remains open when updating
+      sessionStorage.setItem(cacheKey + '_opened', true);
     });
 
   } else {
@@ -210,13 +229,24 @@ function renderCard(cardData, weatherData, denied) {
     const cardElement = document.querySelector('.result-card');
     cardElement.innerHTML = html;
 
-    // find "Open card" button on the page 
-    const openCardButton = document.querySelector('.open-card-button');
-    const wrapper = document.querySelector('.card-content');
+    // check if this mood card has been opened before
+    const opened = sessionStorage.getItem(cacheKey + '_opened') === 'true';
 
-    openCardButton.addEventListener('click', () => {
+    // if the card has already been opened before, immediately remove the blur and hide the button
+    if (opened) {
       wrapper.classList.remove('blurred');
       openCardButton.style.display = 'none';
+    }
+
+    // attach a handler to the "Open card" button
+    openCardButton.addEventListener('click', () => {
+
+      // remove blur and hide the button
+      wrapper.classList.remove('blurred');
+      openCardButton.style.display = 'none';
+
+      // save the flag in sessionStorage so that the card remains open when updating
+      sessionStorage.setItem(cacheKey + '_opened', true);
     });
   }
 }
