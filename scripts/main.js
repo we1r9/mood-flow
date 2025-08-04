@@ -4,6 +4,7 @@ import 'https://unpkg.com/dayjs@1.11.10/dayjs.min.js';
 import { initModalWindow } from './utils/modal-window.js';
 import { titles } from '../data/titles.js';
 import { getRandomItem } from './utils/getRandomItem.js'
+import { getCacheKey } from './utils/getCacheKey.js';
 
 // initialize main page logic: layout, mood selection, header setup, and geolocation modal handling
 document.addEventListener('DOMContentLoaded', () => {
@@ -65,14 +66,20 @@ function initMoodSelection() {
     });
   });
 
-  // start button click handler: check if the mood is selected, go to the result page with mood parameter
+  // handle click on start button
   startButton.addEventListener('click', () => {
     if (!selectedMood) {
       console.warn('Please select the mood before starting.');
       return;
     }
 
-    // redirect to result page with the chosen mood in query string
+    const mood = selectedMood;
+
+    // clear previously cached card for this mood
+    const cacheKey = getCacheKey(mood);
+    sessionStorage.removeItem(cacheKey);
+
+    // navigate to result page with mood as query param
     window.location.href = `result.html?mood=${selectedMood}`;
   });
 }

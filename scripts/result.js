@@ -3,62 +3,92 @@ import { getMood } from './utils/getMood.js';
 import { getRandomItem } from './utils/getRandomItem.js';
 import { getCity } from './utils/location.js';
 import { getWeather } from './utils/getWeather.js';
+import { getCacheKey } from './utils/getCacheKey.js';
 import 'https://unpkg.com/dayjs@1.11.10/dayjs.min.js';
 
-// parse mood from URL query string and
-const params = new URLSearchParams(window.location.search);
-const mood = params.get('mood');
+(async function init() {
+  // parse mood from URL query string
+  const params = new URLSearchParams(window.location.search);
+  const mood = params.get('mood');
 
-// redirect back if missing or invalid
-if (!mood) {
-  window.location.href = 'index.html';
-}
+  // redirect back if missing or invalid
+  if (!mood) {
+    window.location.href = 'index.html';
+  }
 
-// city display: if a city is cached in localStorage, show it, otherwise, show a loading state and trigger geolocation lookup
-const locationElement = document.querySelector(".current-location");
-const cachedCity = localStorage.getItem("city");
+  // city display: if a city is cached in localStorage, show it, otherwise, show a loading state and trigger geolocation lookup
+  const locationElement = document.querySelector('.current-location');
+  const cachedCity = localStorage.getItem('city');
+  const denied = localStorage.getItem('geoDenied');
 
-// check geolocation permission status saved from modal interaction
-const denied = localStorage.getItem('geoDenied');
-const shown = localStorage.getItem('modalShown');
+  if (cachedCity) {
+    locationElement.textContent = cachedCity;
+  } else if (denied) {
+    locationElement.textContent = '';
+  } else {
+    locationElement.textContent = 'Loading';
+    getCity();
+  }
 
-// display city name based on cached data or geolocation permission status
-if (cachedCity) {
-  locationElement.textContent = cachedCity;
-} else if (denied) {
-  locationElement.textContent = '';
-} else if (!shown) {
-  locationElement.textContent = '';
-} else {
-  locationElement.textContent = 'Loading';
-  getCity();
-}
+  // parse the cache-key and check cache
+  const cacheKey = getCacheKey(mood);
+  const savedKey = sessionStorage.getItem(cacheKey);
+  if (savedKey) {
+    const { cardData, weatherData } = JSON.parse(savedKey);
+    return renderCard(cardData, weatherData, denied);
+  } 
 
-// request current weather via getWeather() and return weatherData object
-async function fetchWeatherData() {
-  if (!denied) {
-    try {
-      const { 
-        temperatureCelsius, 
-        weatherDescription, 
-        weatherCode, 
-        observationTime 
-      } = await getWeather();
+  // load current weather and store it in weatherData
+  const weatherData = await fetchWeatherData();
 
-      // debug logs
-      console.log(`${temperatureCelsius} \u2103`, weatherDescription, weatherCode, observationTime);
+  // generate card data
+  const cardData = prepareCardData(mood);
+  if (!cardData) {
+    return window.location.href = 'index.html';
+  }
 
-      return { 
-        temperatureCelsius, 
-        weatherDescription, 
-        weatherCode, 
-        observationTime 
-      };
+  // save data to sessionStorage
+  sessionStorage.setItem(cacheKey, JSON.stringify({
+    cardData,
+    weatherData
+  }));
 
-    } catch (error) {
-      console.error('Failed to load weather data:', error);
+  // render card itself
+  renderCard(cardData, weatherData, denied);
 
-      // return error values
+  // request current weather via getWeather() and return weatherData object
+  async function fetchWeatherData() {
+    if (!denied) {
+      try {
+        const { 
+          temperatureCelsius, 
+          weatherDescription, 
+          weatherCode, 
+          observationTime 
+        } = await getWeather();
+
+        // debug logs
+        console.log(`${temperatureCelsius} \u2103`, weatherDescription, weatherCode, observationTime);
+
+        return { 
+          temperatureCelsius, 
+          weatherDescription, 
+          weatherCode, 
+          observationTime 
+        };
+
+      } catch (error) {
+        console.error('Failed to load weather data:', error);
+
+        // return error values
+        return {
+          temperatureCelsius: null,
+          weatherDescription: 'Unavailable',
+          weatherCode: null,
+          observationTime: null
+        };
+      }
+    } else {
       return {
         temperatureCelsius: null,
         weatherDescription: 'Unavailable',
@@ -66,47 +96,26 @@ async function fetchWeatherData() {
         observationTime: null
       };
     }
-  } else {
-    return {
-      temperatureCelsius: null,
-      weatherDescription: 'Unavailable',
-      weatherCode: null,
-      observationTime: null
+  }
+
+  // prepare the data needed to render the mood card
+  // moodId – identifier of the selected mood
+  function prepareCardData(moodId) {
+    const moodObject = getMood(moodId);
+    if(!moodObject) {
+      console.warn(`Mood "${moodId}" not found.`);
+      return null;
+    }
+
+    return { 
+      message: getRandomItem(moodObject.messages),
+      track: getRandomItem(moodObject.tracks)
     };
   }
-}
-
-// load current weather and store it in weatherData
-const weatherData = await fetchWeatherData();
-
-// prepare the data needed to render the mood card
-// moodId – identifier of the selected mood
-function prepareCardData(moodId) {
-  const moodObject = getMood(moodId);
-  if(!moodObject) {
-    console.warn(`Mood "${moodId}" not found.`);
-    return null;
-  }
-
-  return { 
-    message: getRandomItem(moodObject.messages),
-    track: getRandomItem(moodObject.tracks)
-  };
-}
-
-// build card data from URL param
-const cardData = prepareCardData(mood);
-if (!cardData) {
-
-  // invalid mood → go back to selection
-  window.location.href = 'index.html';
-} else {
-  // proceed to render once weatherData is ready
-  renderCard(cardData, weatherData);
-}
+})();
 
 // render the mood result card into the DOM
-function renderCard(cardData, weatherData) {
+function renderCard(cardData, weatherData, denied) {
   // prepare data with sensible defaults 
   const today = dayjs().format('ddd, MMM D');
   const { 
@@ -155,6 +164,16 @@ function renderCard(cardData, weatherData) {
     // insert into the page
     const cardElement = document.querySelector('.result-card');
     cardElement.innerHTML = html;
+
+    // find "Open card" button on the page 
+    const openCardButton = document.querySelector('.open-card-button');
+    const wrapper = document.querySelector('.card-content');
+
+    openCardButton.addEventListener('click', () => {
+      wrapper.classList.remove('blurred');
+      openCardButton.style.display = 'none';
+    });
+
   } else {
     // geolocation denied — render result card without weather
     const html = `
@@ -190,14 +209,14 @@ function renderCard(cardData, weatherData) {
     // insert into the page
     const cardElement = document.querySelector('.result-card');
     cardElement.innerHTML = html;
+
+    // find "Open card" button on the page 
+    const openCardButton = document.querySelector('.open-card-button');
+    const wrapper = document.querySelector('.card-content');
+
+    openCardButton.addEventListener('click', () => {
+      wrapper.classList.remove('blurred');
+      openCardButton.style.display = 'none';
+    });
   }
 }
-
-const openCardButton = document.querySelector('.open-card-button');
-const wrapper = document.querySelector('.card-content');
-
-openCardButton.addEventListener('click', () => {
-  wrapper.classList.remove('blurred');
-
-  openCardButton.style.display = 'none';
-});
