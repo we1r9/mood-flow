@@ -1,5 +1,5 @@
 // import utilities for populating header (city & date)
-import { getCity } from './utils/location.js';
+import { getCity, toggleGeoAccess, tryRequestGeo } from './utils/location.js';
 import 'https://unpkg.com/dayjs@1.11.10/dayjs.min.js';
 import { initModalWindow } from './utils/modal-window.js';
 import { titles } from '../data/titles.js';
@@ -33,12 +33,35 @@ function initHeader() {
     locationElement.textContent = cachedCity;
   } else if (denied) {
     locationElement.textContent = '';
-  } else if (!shown) {
-    locationElement.textContent = '';
   } else {
-    locationElement.textContent = 'Loading';
-    getCity();
+    locationElement.textContent = '';
   }
+
+  // находим кнопку для смены доступа к гео на странице
+  const geoButton = document.querySelector('.change-geo-access-btn');
+
+  // вешаем слушатель клика
+  geoButton.addEventListener('click', () => {
+    const denied = localStorage.getItem('geoDenied') === 'true';
+    if (denied) {
+      // 
+      locationElement.textContent = 'Loading…';
+      getCity()
+        // пробуем получить гео
+        .then(city => {
+          locationElement.textContent = city;
+        })
+        .catch(error => {
+          // показываем подсказку о включении гео в настройках
+          showEnableGeoHint();  // 
+          locationElement.textContent = '';
+        });
+    } else {
+      toggleGeoAccess().then(() => {
+        locationElement.textContent = '';
+      });
+    }
+  });
 }
 
 // handle mood selection and redirect to result page with selected mood

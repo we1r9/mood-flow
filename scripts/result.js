@@ -19,7 +19,7 @@ import 'https://unpkg.com/dayjs@1.11.10/dayjs.min.js';
   // city display: if a city is cached in localStorage, show it, otherwise, show a loading state and trigger geolocation lookup
   const locationElement = document.querySelector('.current-location');
   const cachedCity = localStorage.getItem('city');
-  const denied = localStorage.getItem('geoDenied');
+  const denied = localStorage.getItem('geoDenied') === 'true';
 
   if (cachedCity) {
     locationElement.textContent = cachedCity;
@@ -228,6 +228,10 @@ function renderCard(cardData, weatherData, denied, cacheKey) {
     // insert into the page
     const cardElement = document.querySelector('.result-card');
     cardElement.innerHTML = html;
+
+    // find "Open card" button on the page 
+    const openCardButton = document.querySelector('.open-card-button');
+    const wrapper = document.querySelector('.card-content');
 
     // check if this mood card has been opened before
     const opened = sessionStorage.getItem(cacheKey + '_opened') === 'true';
