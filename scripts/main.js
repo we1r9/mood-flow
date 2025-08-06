@@ -5,6 +5,7 @@ import { initModalWindow } from './utils/modal-window.js';
 import { titles } from '../data/titles.js';
 import { getRandomItem } from './utils/getRandomItem.js'
 import { getCacheKey } from './utils/getCacheKey.js';
+import { showEnableGeoHint } from './utils/location.js';
 
 // initialize main page logic: layout, mood selection, header setup, and geolocation modal handling
 document.addEventListener('DOMContentLoaded', () => {
@@ -17,6 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
   );
 });
 
+
+
 // display current date and user city in the header
 function initHeader() {
   // data: format via dayjs
@@ -25,9 +28,9 @@ function initHeader() {
 
   // handle location display based on localStorage and geolocation status
   const locationElement = document.querySelector('.current-location');
+
   const cachedCity = localStorage.getItem('city');
   const denied = localStorage.getItem('geoDenied');
-  const shown = localStorage.getItem('modalShown');
 
   if (cachedCity) {
     locationElement.textContent = cachedCity;
@@ -41,24 +44,50 @@ function initHeader() {
   const geoButton = document.querySelector('.change-geo-access-btn');
 
   // вешаем слушатель клика
-  geoButton.addEventListener('click', () => {
+  geoButton.addEventListener('click', async () => {
+    let permissionState = 'prompt';
+    if (navigator.permissions) {
+      try {
+        const status = await navigator.permissions.query( { name: 'geolocation'});
+        permissionState = status.state;
+      } catch {
+        permissionState = 'prompt'
+      }
+    }
+    if (permissionState === 'denied') {
+      showEnableGeoHint();
+      return;
+    }
+
     const denied = localStorage.getItem('geoDenied') === 'true';
     if (denied) {
-      // 
-      locationElement.textContent = 'Loading…';
-      getCity()
-        // пробуем получить гео
-        .then(city => {
+      locationElement.innerHTML = `
+        <div class="sk-flow">
+          <div class="sk-flow-dot"></div>
+          <div class="sk-flow-dot"></div>
+          <div class="sk-flow-dot"></div>
+        </div>
+      `;
+
+      const geoPromise = getCity();
+      const delayPromise = new Promise(
+        resolve => setTimeout(resolve, 1000));
+      Promise.all([geoPromise, delayPromise])
+        .then(([city]) => {
           locationElement.textContent = city;
         })
         .catch(error => {
-          // показываем подсказку о включении гео в настройках
-          showEnableGeoHint();  // 
+          showEnableGeoHint();
           locationElement.textContent = '';
+          locationElement.classList.remove('hidden');
         });
     } else {
       toggleGeoAccess().then(() => {
-        locationElement.textContent = '';
+        locationElement.classList.add('hidden');
+        setTimeout(() => {
+          locationElement.textContent = '';
+          locationElement.classList.remove('hidden');
+        }, 300);
       });
     }
   });
@@ -116,45 +145,64 @@ function loadPage() {
 
   contentElement.innerHTML = `
     <h1 class="mood-title">
-      ${pageTitle}
+      <span class="typewriter">${pageTitle}</span>
     </h1>
 
     <div class="mood">
       <div class="mood-grid">
         <button type="button"
-                class="btn btn-secondary mood-card"
+                class="mood-card test-card"
                 data-mood="happy">
           <img class="mood-icon" src="images/grinning-face.png">
         </button>
         <button type="button" 
-                class="btn btn-secondary mood-card"
+                class="mood-card"
                 data-mood="nerdy">
           <img class="mood-icon" src="images/nerd-face.png">
         </button>
         <button type="button" 
-                class="btn btn-secondary mood-card"
+                class="mood-card"
                 data-mood="angry">
           <img class="mood-icon" src="images/face-with-symbols-on-mouth.png">
         </button>
         <button type="button" 
-                class="btn btn-secondary mood-card"
+                class="mood-card"
                 data-mood="peaceful">
           <img class="mood-icon" src="images/smiling-face-with-halo.png">
         </button>
         <button type="button" 
-                class="btn btn-secondary mood-card"
+                class="mood-card"
                 data-mood="cool">
           <img class="mood-icon" src="images/smiling-face-with-sunglasses.png">
         </button>
         <button type="button" 
-                class="btn btn-secondary mood-card"
+                class="mood-card"
                 data-mood="emotional">
           <img class="mood-icon" src="images/loudly-crying-face.png">
         </button>
       </div>
 
       <!-- stays hidden until a mood is selected -->
-      <button class="btn btn-secondary mood-start hidden">Start the day!</button>
+      <button class="mood-start hidden">Create card</button>
     </div>
   `;
+
+  function titleTypewriter() {
+    const typewriterEl = document.querySelector('.typewriter');
+    const fullText = typewriterEl.textContent.trim();
+    typewriterEl.textContent = '';
+
+    let index = 0;
+    function typeNextChar() {
+      if (index < fullText.length) {
+        typewriterEl.textContent += fullText[index];
+        index++;
+        setTimeout(typeNextChar, 90);
+      } else {
+        typewriterEl.classList.add('blinking');
+      }
+    }
+    typeNextChar();
+  }
+  titleTypewriter();
 }
