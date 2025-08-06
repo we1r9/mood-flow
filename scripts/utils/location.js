@@ -112,7 +112,7 @@ export function toggleGeoAccess() {
 }
 
 // показываем подсказку, чтобы пользователь понимал, что нужно включить доступ к гео самому
-function showEnableGeoHint() {
+export function showEnableGeoHint() {
 
   // создаем элемент
   const toast = document.createElement('div');

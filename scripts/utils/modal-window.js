@@ -24,10 +24,18 @@ export function initModalWindow(onAccept, onDecline) {
 
     // optionally update the UI while waiting for geolocation
     const locationElement = document.querySelector('.current-location');
-    locationElement.textContent = 'Loading...';
+    locationElement.innerHTML = `
+      <div class="sk-flow">
+        <div class="sk-flow-dot"></div>
+        <div class="sk-flow-dot"></div>
+        <div class="sk-flow-dot"></div>
+      </div>
+    `;
 
-    // trigger external logic for handling geolocation
-    onAccept();
+    setTimeout(() => {
+      // trigger external logic for handling geolocation
+      onAccept();
+    }, 1000);
   });
 
   // handle user clicking "Decline"

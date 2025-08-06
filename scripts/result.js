@@ -26,8 +26,17 @@ import 'https://unpkg.com/dayjs@1.11.10/dayjs.min.js';
   } else if (denied) {
     locationElement.textContent = '';
   } else {
-    locationElement.textContent = 'Loading';
-    getCity();
+    locationElement.innerHTML = `
+      <div class="sk-flow">
+        <div class="sk-flow-dot"></div>
+        <div class="sk-flow-dot"></div>
+        <div class="sk-flow-dot"></div>
+      </div>
+    `;
+
+    setTimeout(() => {
+      getCity();
+    }, 1000);
   }
 
   // parse the cache-key and check cache
