@@ -96,7 +96,7 @@ html, body {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  margin-top: 20px;
+  margin-top: 50px;
   padding-bottom: 100px;
 }
 
@@ -196,24 +196,6 @@ html, body {
   background-color: rgb(255, 255, 255);
 }
 
-/* Toast */
-
-.geo-toast {
-  position: fixed;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #222;
-  color: #fff;
-  font-size: 0.9rem;
-  padding: 0.75rem 1.25rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  z-index: 10000;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
 /* Typewriter */
 
 .typewriter {
@@ -301,6 +283,7 @@ html, body {
   color: white;
   font-size: 1rem;
   margin: 0;
+  margin-left: 5px;
 }
 
 .github-logo {
@@ -313,12 +296,6 @@ html, body {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-}
-
-.name {
-  color: #fff;
-  font-size: 1rem;
-  margin: 0;
 }
 
 .github-link {
@@ -337,13 +314,12 @@ html, body {
   position: absolute;
   top: 63%;
   left: 50%;
-  transform: translate(-50%, -50%);  /* точно по центру */
+  transform: translate(-50%, -50%);  
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  /* это не нужно при absolute */
   margin: 0 auto;
 }
 
@@ -359,4 +335,58 @@ html, body {
 
 .project-link:hover {
   text-decoration: underline;
+}
+
+/* Toast */
+
+.geo-toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  background-color: #ffffff;
+  color: #000000;
+  font-size: 1rem;
+  padding: 1rem 1.5rem;
+  text-align: center;
+  border-radius: 1.2rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  z-index: 10000;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.7);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+.geo-toast.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Preloader */
+
+.preloader {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: #ffffff;       
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;             
+}
+
+.preloader .sk-chase {
+  transform: scale(2);
+  transform-origin: center center;
+}
+
+.preloader.hide {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
 }
