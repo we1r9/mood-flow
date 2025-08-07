@@ -18,8 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
   );
 });
 
-
-
 // display current date and user city in the header
 function initHeader() {
   // data: format via dayjs
@@ -187,7 +185,7 @@ function loadPage() {
     </div>
   `;
 
-  function titleTypewriter() {
+    function titleTypewriter() {
     const typewriterEl = document.querySelector('.typewriter');
     const fullText = typewriterEl.textContent.trim();
     typewriterEl.textContent = '';

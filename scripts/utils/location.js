@@ -117,34 +117,22 @@ export function showEnableGeoHint() {
   // создаем элемент
   const toast = document.createElement('div');
   toast.className = 'geo-toast';
-  toast.innerText = 'Please enable location access in your browser settings to see the weather or clear browser history';
-
-  Object.assign(toast.style, {
-    position: 'fixed',
-    bottom: '2rem',
-    left: '50%',
-    transform: 'translateX(-50%)',
-    backgroundColor: '#222',
-    color: '#fff',
-    fontSize: '0.9rem',
-    padding: '0.75rem 1.25rem',
-    borderRadius: '0.5rem',
-    boxShadow: '0 4px 10px rgba(0, 0, 0, 0.3)',
-    zIndex: 10000,
-    opacity: '0',
-    transition: 'opacity 0.3s ease'
-  });
+  toast.innerHTML = 'To display your city and local weather, please enable location access in your browser settings';
 
   // добавляем элемент в конец html
   document.body.appendChild(toast);
 
-  requestAnimationFrame(() => toast.style.opacity = '1');
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      toast.classList.add('show');
+    });
+  });
 
   // убираем через 3 секунды
   setTimeout(() => {
-    toast.style.opacity = '0';
+    toast.classList.remove('show');
     toast.addEventListener('transitionend', () => toast.remove(), { once: true});
-  }, 3000);
+  }, 3500);
 }
 
 // попытка запроса к гео с учетом разрешений

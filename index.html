@@ -13,6 +13,17 @@
     <link rel="stylesheet" href="styles/spinkit.min.css">
   </head>
   <body>
+    <div class="preloader">
+      <div class="sk-chase">
+        <div class="sk-chase-dot"></div>
+        <div class="sk-chase-dot"></div>
+        <div class="sk-chase-dot"></div>
+        <div class="sk-chase-dot"></div>
+        <div class="sk-chase-dot"></div>
+        <div class="sk-chase-dot"></div>
+      </div>
+    </div>
+
     <header class="header">
       <div class="header-left">
         <p class="current-date"></p>
@@ -44,7 +55,6 @@
 
       <div class="bar-right"> 
         <a href="https://github.com/we1r9" target="_blank" class="github-link">
-          <p class="name">we1r9</p>
           <img class="github-logo" src="images/github-logo.png">
         </a>
       </div>
@@ -65,5 +75,12 @@
 
     <script type="module" src="scripts/main.js"></script>
     <script type="module" src="scripts/utils/modal-window.js"></script>
+
+    <script>
+      window.addEventListener('load', () => {
+        const preloader = document.querySelector('.preloader');
+        preloader.classList.add('hide');
+      });
+    </script>
   </body>
 </html>
