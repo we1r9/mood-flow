@@ -206,3 +206,10 @@ function loadPage() {
   }
   titleTypewriter();
 }
+
+const arrowButton = document.querySelector('.arrow-up-button');
+const bar = document.querySelector('.bar');
+
+arrowButton.addEventListener('click', () => {
+  bar.classList.toggle('active');
+});
