@@ -5,24 +5,36 @@ export function initModalWindow(onAccept, onDecline) {
   const acceptButton = document.querySelector('.accept-button');
   const declineButton = document.querySelector('.decline-button');
 
+  function showModal() {
+    const modal = document.querySelector('.modal');
+    // set the modal to be visible
+    modal.classList.remove('hidden');
+    
+    requestAnimationFrame(() => {
+      modal.classList.add('show');
+    });
+  }
+
   // if user has already seen the modal once, do not show it again
   if (localStorage.getItem('modalShown')) return;
 
   // show the modal
   modal.classList.remove('hidden');
+  showModal();
 
-  // handle user clicking "Allow"
+  function hideModal() {
+    modal.classList.remove('show');
+
+    modal.addEventListener('transitionend', () => {
+      // remove the modal from the DOM after hiding
+    }, { once: true });
+  }
+
   acceptButton.addEventListener('click', () => {
-    // mark that modal has been shown
     localStorage.setItem('modalShown', 'true');
 
-    // hide modal
-    modal.classList.add('hidden');
-
-    // reset geolocation denial flag in case user had previously declined
     localStorage.removeItem('geoDenied');
 
-    // optionally update the UI while waiting for geolocation
     const locationElement = document.querySelector('.current-location');
     locationElement.innerHTML = `
       <div class="sk-flow">
@@ -31,6 +43,8 @@ export function initModalWindow(onAccept, onDecline) {
         <div class="sk-flow-dot"></div>
       </div>
     `;
+
+    hideModal();
 
     setTimeout(() => {
       // trigger external logic for handling geolocation
@@ -47,7 +61,7 @@ export function initModalWindow(onAccept, onDecline) {
     localStorage.setItem('geoDenied', 'true');
 
     // hide modal
-    modal.classList.add('hidden');
+    hideModal();
 
     // trigger fallback logic
     onDecline();

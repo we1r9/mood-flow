@@ -21,19 +21,45 @@
         <p class="current-location"></p>
       </div>
       <div class="header-right">
-        <button type="button" class="btn btn-secondary change-geo-access-btn">
-          <i class="bi bi-geo-alt-fill"></i>
+        <button type="button" class="change-geo-access-btn">
+          <img class="geo-icon" src="images/geo-icon.png">
         </button>
       </div>
     </header>
     
     <main class="content"></main>
+    
+    <div class="bar">
+      <p class="version">v1.0.0</p>
+
+      <button type="button" class="arrow-up-button">
+        <img class="arrow-up-icon" src="images/arrow-up.png">
+      </button>
+
+      <div class="bar-middle">
+        <a href="https://github.com/we1r9/mood-flow" target="_blank" class="project-link">
+          <p>Mood Flow</p>
+        </a>
+      </div>
+
+      <div class="bar-right"> 
+        <a href="https://github.com/we1r9" target="_blank" class="github-link">
+          <p class="name">we1r9</p>
+          <img class="github-logo" src="images/github-logo.png">
+        </a>
+      </div>
+    </div>
 
     <div class="modal hidden">
       <div class="modal-content">
-        <button class="decline-button">X</button>
-        <p>To show the weather in your city, allow access to geolocation. We do not store your data.</p>
-        <button class="accept-button">Allow</button>
+
+        <h2 class="modal-title">Enable Location Access</h2>
+        <p class="modal-text">For a better experience, please enable location access. As a serverless website, we don't see or store your location data.</p>
+
+        <div class="modal-actions">
+          <button class="decline-button">Decline</button>
+          <button class="accept-button">Allow</button>
+        </div>
       </div>
     </div>
 

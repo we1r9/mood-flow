@@ -16,6 +16,13 @@ body {
   font-family: "SF Pro Rounded", "Segoe UI", Helvetica, Arial;
 }
 
+html, body {
+  margin: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
 /* Header */
 
 .header {
@@ -64,16 +71,22 @@ body {
   width: 40px;
   border: none;
   border-radius: 50%;
-  background-color: rgb(205, 205, 205);
+  background-color: rgb(226, 226, 226);
   margin-right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
 }
 
-.theme-toggle-btn {
-  height: 40px;
-  width: 40px;
-  border: none;
-  border-radius: 50%;
-  background-color: rgb(205, 205, 205);
+.geo-icon {
+  height: 25px;
+  width: 25px;
+}
+
+.change-geo-access-btn:hover {
+  background-color: rgb(180, 180, 180);
+  transform: scale(1.08);
 }
 
 /* Main */
@@ -84,6 +97,7 @@ body {
   align-items: center;
   text-align: center;
   margin-top: 20px;
+  padding-bottom: 100px;
 }
 
 .mood-title {
@@ -231,4 +245,118 @@ body {
   margin-top: 25px;
   transform: scale(0.7);
   transform-origin: center center;
+}
+
+/* Bar */
+
+.bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 65px;
+  padding: 0 1rem;    
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  background: rgb(35, 35, 35);
+
+  transform: translateY(100%);
+  transition: transform 0.4s ease;
+  box-sizing: border-box;
+
+  }
+
+.bar.active {
+  transform: translateY(0);
+}
+
+.arrow-up-button {
+  position: absolute;
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+
+  transition: transform 0.4s ease;
+}
+
+.arrow-up-icon {
+  height: 50px;
+  width: 50px;
+  transition: transform 0.4s ease;
+}
+
+.bar.active .arrow-up-icon {
+  transform: rotate(180deg);
+}
+
+.version {
+  color: white;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.github-logo {
+  width: 40px;
+  height: 40px;
+}
+
+.bar-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.name {
+  color: #fff;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.github-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: #fff;
+}
+
+.github-link:hover {
+  text-decoration: underline;
+}
+
+.bar-middle {
+  position: absolute;
+  top: 63%;
+  left: 50%;
+  transform: translate(-50%, -50%);  /* точно по центру */
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* это не нужно при absolute */
+  margin: 0 auto;
+}
+
+.project-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  
+  text-decoration: none;
+  color: white;
+  font-size: 1rem;
+}
+
+.project-link:hover {
+  text-decoration: underline;
 }
