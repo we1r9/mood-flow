@@ -257,7 +257,7 @@ html, body {
 
 .arrow-up-button {
   position: absolute;
-  top: -50px;
+  top: -40px;
   left: 50%;
   transform: translateX(-50%);
 
@@ -270,8 +270,8 @@ html, body {
 }
 
 .arrow-up-icon {
-  height: 50px;
-  width: 50px;
+  height: 35px;
+  width: auto;
   transition: transform 0.4s ease;
 }
 

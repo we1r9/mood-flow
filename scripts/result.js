@@ -130,7 +130,7 @@ import 'https://unpkg.com/dayjs@1.11.10/dayjs.min.js';
 // render the mood result card into the DOM
 function renderCard(cardData, weatherData, denied, cacheKey) {
   // prepare data with sensible defaults 
-  const today = dayjs().format('ddd, MMM D');
+  const today = dayjs().format('dddd, MMM D');
   const { 
     temperatureCelsius = 'N/A',
     weatherDescription = 'Unavailable'
@@ -167,6 +167,16 @@ function renderCard(cardData, weatherData, denied, cacheKey) {
 
           <div class="result-message">
             ${message}
+          </div>
+
+          <div>
+            <a href="${track.link}" target="_blank">
+              <button class="spotify-button">
+                <img 
+                  class="spotify-icon" 
+                  src="images/spotify.png">
+              </button>
+            </a>
           </div>
         </div>
 

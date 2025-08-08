@@ -1,29 +1,91 @@
-.result-card {
-  margin: 1.5rem;
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+.app {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 75%;
+}
+
+.header-middle {
+  position: absolute;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  transform: translateX(-50%);
+}
+
+.current-date-card{
+  font-weight: 500;
+  font-size: 1.12rem;
+  margin-top: 1.5rem;
+}
+
+.result-weather {
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
 }
 
 .cover {
-  height: 200px;
-  width: 200px;
-  border-radius: 25px;
+  height: 180px;
+  width: auto;
+  border-radius: 23px;
+  margin-bottom: 0.3rem;
+}
+
+.result-title {
+  font-weight: 500;
+}
+
+.result-artist {
+  margin-bottom: 0.4rem;
+}
+
+.result-message {
+  margin-bottom: 0.8rem;
+  padding: 0 1.5rem;
+  text-align: center;
 }
 
 .result-card {
   display: flex;
-  width: 320px;
+  width: 280px;
   margin: 0.5rem auto;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 0 17px rgba(24, 23, 23, 0.2);
+  border-radius: 33px;
+  transition: transform 0.3s;
+
+  will-change: transform;          /* заранее готовим слой */
+  backface-visibility: hidden;     /* убирает артефакты сглаживания */
+  transform: translateZ(0);        /* форсируем композитинг на GPU */
 }
 
-.card-wrapper {
-  position: relative;
+.result-card:hover {
+  transform: translateZ(0) scale(1.05); /* поменьше масштаб — меньше мыла */
+  box-shadow: 0 12px 45px rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card-content {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
 }
 
 .card-content.blurred {
   filter: blur(9px);
   transition: filter 0.3s ease;
+}
+
+.card-wrapper {
+  position: relative;
 }
 
 #open-card-button {
@@ -33,3 +95,76 @@
   transform: translate(-50%, -50%);
   z-index: 1;
 }
+
+.spotify-button {
+  all: unset;
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  height: 40px;
+  margin-bottom: 1.6rem;
+}
+
+.spotify-icon {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Зелёная «подложка» ровно под картинкой (невидима по умолчанию) */
+.spotify-button::before {
+  content: "";
+  margin-top: 2px;
+  margin-bottom: 5px;
+  margin-left: 5px;
+  height: 35px;
+  width: 100px;
+  position: absolute;
+  inset: 0;
+  background: #1DB954;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+/* При наведении зелень проявляется, но только сквозь прозрачные участки PNG */
+.spotify-button:hover::before {
+  opacity: 1;
+}
+
+
+/*
+<div class="card-wrapper">
+  <div class="card-content blurred">
+    <div class="current-date-card">
+      ${today}
+    </div>
+
+    <div class="result-weather">
+      It's ${temperatureCelsius} \u2103 now. ${weatherDescription}.
+    </div>
+
+    <div class="result-cover">
+      <img class="cover"
+        src="${track.cover}"
+      >
+    </div>
+
+    <div class="result-title">
+      ${track.title}
+    </div>
+
+    <div class="result-artist">
+      ${track.artist}
+    </div>
+
+    <div class="result-message">
+      ${message}
+    </div>
+  </div>
+
+  <button class="btn btn-secondary open-card-button">Open card</button>
+</div>
+*/
