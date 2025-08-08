@@ -146,7 +146,7 @@ function loadPage() {
       <span class="typewriter">${pageTitle}</span>
     </h1>
 
-    <div class="mood">
+    <div class="mood fade-in">
       <div class="mood-grid">
         <button type="button"
                 class="mood-card test-card"

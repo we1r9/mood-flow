@@ -25,13 +25,13 @@
     </div>
 
     <header class="header">
-      <div class="header-left">
+      <div class="header-left fade-in">
         <p class="current-date"></p>
       </div>
-      <div class="header-middle">
+      <div class="header-middle fade-in">
         <p class="current-location"></p>
       </div>
-      <div class="header-right">
+      <div class="header-right fade-in">
         <button type="button" class="change-geo-access-btn">
           <img class="geo-icon" src="images/geo-icon.png">
         </button>
@@ -80,6 +80,16 @@
       window.addEventListener('load', () => {
         const preloader = document.querySelector('.preloader');
         preloader.classList.add('hide');
+      });
+    </script>
+    
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        requestAnimationFrame(() => {
+          document.querySelectorAll('.fade-in').forEach(el => {
+            el.classList.add('visible');
+          });
+        });
       });
     </script>
   </body>

@@ -141,135 +141,137 @@ function renderCard(cardData, weatherData, denied, cacheKey) {
   if (!denied) {
     // user allowed geolocation — show weather in result card
     const html = `
-      <div class="card-wrapper">
-        <div class="card-content blurred">
-          <div class="current-date-card">
-            ${today}
-          </div>
-
-          <div class="result-weather">
-            It's ${temperatureCelsius} \u2103 now. ${weatherDescription}.
-          </div>
-
-          <div class="result-cover">
-            <img class="cover"
-              src="${track.cover}"
-            >
-          </div>
-
-          <div class="result-title">
-            ${track.title}
-          </div>
-
-          <div class="result-artist">
-            ${track.artist}
-          </div>
-
-          <div class="result-message">
-            ${message}
-          </div>
-
-          <div>
-            <a href="${track.link}" target="_blank">
-              <button class="spotify-button">
-                <img 
-                  class="spotify-icon" 
-                  src="images/spotify.png">
-              </button>
-            </a>
-          </div>
+      <div class="card-content">
+        <div class="current-date-card">
+          ${today}
         </div>
 
-        <button class="btn btn-secondary open-card-button">Open card</button>
+        <div class="result-weather">
+          It's ${temperatureCelsius} \u2103 now. ${weatherDescription}.
+        </div>
+
+        <div class="result-cover">
+          <img class="cover"
+            src="${track.cover}"
+          >
+        </div>
+
+        <div class="result-title">
+          ${track.title}
+        </div>
+
+        <div class="result-artist">
+          ${track.artist}
+        </div>
+
+        <div class="result-message">
+          ${message}
+        </div>
+
+        <div>
+          <a href="${track.link}" target="_blank">
+            <button class="spotify-button">
+              <img 
+                class="spotify-icon" 
+                src="images/spotify.png">
+            </button>
+          </a>
+        </div>
       </div>
     `;
 
-    // insert into the page
     const cardElement = document.querySelector('.result-card');
     cardElement.innerHTML = html;
 
-    // find "Open card" button on the page 
     const openCardButton = document.querySelector('.open-card-button');
-    const wrapper = document.querySelector('.card-content');
 
-    // check if this mood card has been opened before
     const opened = sessionStorage.getItem(cacheKey + '_opened') === 'true';
 
-    // if the card has already been opened before, immediately remove the blur and hide the button
     if (opened) {
-      wrapper.classList.remove('blurred');
+      cardElement.classList.add('visible');
       openCardButton.style.display = 'none';
     }
 
-    // attach a handler to the "Open card" button
-    openCardButton.addEventListener('click', () => {
-
-      // remove blur and hide the button
-      wrapper.classList.remove('blurred');
+    function openCard() {
+      cardElement.classList.remove('visible');
+      requestAnimationFrame(() => {
+        cardElement.classList.add('visible');
+      });
       openCardButton.style.display = 'none';
-
-      // save the flag in sessionStorage so that the card remains open when updating
       sessionStorage.setItem(cacheKey + '_opened', true);
+    }
+    openCardButton.addEventListener('click', openCard);
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        openCard();
+      }
     });
 
   } else {
     // geolocation denied — render result card without weather
     const html = `
-      <div class="card-wrapper">
-        <div class="card-content blurred">
-          <div class="current-date-card">
-            ${today}
-          </div>
-
-          <div class="result-cover">
-            <img class="cover"
-              src="${track.cover}"
-            >
-          </div>
-
-          <div class="result-title">
-            ${track.title}
-          </div>
-
-          <div class="result-artist">
-            ${track.artist}
-          </div>
-
-          <div class="result-message">
-            ${message}
-          </div>
+      <div class="card-content">
+        <div class="current-date-card no-weather-date">
+          ${today}
         </div>
 
-        <button class="btn btn-secondary open-card-button">Open card</button>
+        <div class="result-cover">
+          <img class="cover"
+            src="${track.cover}"
+          >
+        </div>
+
+        <div class="result-title">
+          ${track.title}
+        </div>
+
+        <div class="result-artist">
+          ${track.artist}
+        </div>
+
+        <div class="result-message">
+          ${message}
+        </div>
+
+        <div>
+          <a href="${track.link}" target="_blank">
+            <button class="spotify-button">
+              <img 
+                class="spotify-icon" 
+                src="images/spotify.png">
+            </button>
+          </a>
+        </div>
       </div>
     `;
 
-    // insert into the page
     const cardElement = document.querySelector('.result-card');
     cardElement.innerHTML = html;
 
-    // find "Open card" button on the page 
     const openCardButton = document.querySelector('.open-card-button');
-    const wrapper = document.querySelector('.card-content');
 
-    // check if this mood card has been opened before
     const opened = sessionStorage.getItem(cacheKey + '_opened') === 'true';
 
-    // if the card has already been opened before, immediately remove the blur and hide the button
     if (opened) {
-      wrapper.classList.remove('blurred');
+      cardElement.classList.add('visible');
       openCardButton.style.display = 'none';
     }
 
-    // attach a handler to the "Open card" button
-    openCardButton.addEventListener('click', () => {
-
-      // remove blur and hide the button
-      wrapper.classList.remove('blurred');
+    function openCard() {
+      cardElement.classList.remove('visible');
+      requestAnimationFrame(() => {
+        cardElement.classList.add('visible');
+      });
       openCardButton.style.display = 'none';
-
-      // save the flag in sessionStorage so that the card remains open when updating
       sessionStorage.setItem(cacheKey + '_opened', true);
+    }
+    openCardButton.addEventListener('click', openCard);
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        openCard();
+      }
     });
   }
 }
