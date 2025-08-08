@@ -2,9 +2,9 @@ export const moods = [
   {
     id: 'nerdy',
     messages: [
-      "Coffee. Code. Conquer.",
-      `Today's a good day to solve something beautiful.`,
-      "Stay curious — the world is full of patterns."
+      'Very short message',
+      'This is just an example of text based on your 27 mood',
+      'This is just an example of text based on your 27 mood that can be randomly generated and given to you...'
     ],
     tracks: [
       {
