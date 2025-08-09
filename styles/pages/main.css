@@ -52,6 +52,11 @@ html, body {
   font-size: 1.2rem;
   transition: opacity 0.3s ease;
   opacity: 1;
+  font-size: clamp(1.15rem, 2.5vw, 1.2rem);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 140px;
 }
 
 .current-location:hover {
@@ -294,6 +299,12 @@ html, body {
 .github-logo {
   width: 40px;
   height: 40px;
+  transition: transform 0.1s ease;
+}
+
+.github-logo:hover {
+  transform: scale(1.05);
+  transition: transform 0.1s ease;
 }
 
 .bar-right {
@@ -394,4 +405,5 @@ html, body {
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
+  visibility: hidden;
 }

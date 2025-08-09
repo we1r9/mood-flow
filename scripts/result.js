@@ -14,6 +14,7 @@ import 'https://unpkg.com/dayjs@1.11.10/dayjs.min.js';
   // redirect back if missing or invalid
   if (!mood) {
     window.location.href = 'index.html';
+    return;
   }
 
   // city display: if a city is cached in localStorage, show it, otherwise, show a loading state and trigger geolocation lookup
@@ -35,7 +36,7 @@ import 'https://unpkg.com/dayjs@1.11.10/dayjs.min.js';
     `;
 
     setTimeout(() => {
-      getCity();
+      getCity().catch(() => {});
     }, 1000);
   }
 
@@ -169,7 +170,7 @@ function renderCard(cardData, weatherData, denied, cacheKey) {
         </div>
 
         <div>
-          <a href="${track.link}" target="_blank">
+          <a href="${track.link}" target="_blank" rel="noopener">
             <button class="spotify-button">
               <img 
                 class="spotify-icon" 
@@ -235,7 +236,7 @@ function renderCard(cardData, weatherData, denied, cacheKey) {
         </div>
 
         <div>
-          <a href="${track.link}" target="_blank">
+          <a href="${track.link}" target="_blank" rel="noopener">
             <button class="spotify-button">
               <img 
                 class="spotify-icon" 
