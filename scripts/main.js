@@ -16,13 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
     () => getCity(),
     () => {}
   );
-
-  const arrowButton = document.querySelector('.arrow-up-button');
-  const bar = document.querySelector('.bar');
-
-  arrowButton.addEventListener('click', () => {
-    bar.classList.toggle('active');
-  });
 });
 
 // display current date and user city in the header

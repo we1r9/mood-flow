@@ -104,20 +104,27 @@ html, body {
 
 .spotify-button::before {
   content: "";
-  margin-top: 2px;
-  margin-bottom: 5px;
-  margin-left: 5px;
-  height: 35px;
-  width: 100px;
   position: absolute;
-  inset: 0;
+  top: 2px;
+  left: 5px;
+  height: 35px;
+  right: 0;
   background: rgb(30, 215, 96);
   opacity: 0;
   transition: opacity 0.2s ease;
 }
 
-.spotify-button:hover::before {
+.spotify-button:hover::before,
+.spotify-button:active::before {
   opacity: 1;
+}
+
+.spotify-button { 
+  -webkit-tap-highlight-color: transparent; 
+}
+
+.spotify-button::before { 
+  will-change: opacity; 
 }
 
 .no-weather-date {
