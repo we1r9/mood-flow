@@ -27,21 +27,25 @@ html, body {
 .result-weather {
   font-size: 1rem;
   margin-bottom: 0.75rem;
+  padding: 0 1.5rem;
 }
 
 .cover {
   height: 180px;
   width: auto;
-  border-radius: 23px;
+  border-radius: 13px;
   margin-bottom: 0.3rem;
+  box-shadow: 0 0 7px rgba(24, 23, 23, 0.1);
 }
 
 .result-title {
   font-weight: 500;
+  padding: 0 1.5rem;
 }
 
 .result-artist {
   margin-bottom: 0.4rem;
+  padding: 0 1.5rem;
 }
 
 .result-message {

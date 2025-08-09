@@ -149,34 +149,34 @@ function loadPage() {
     <div class="mood fade-in">
       <div class="mood-grid">
         <button type="button"
-                class="mood-card test-card"
-                data-mood="happy">
-          <img class="mood-icon" src="images/grinning-face.png">
+                class="mood-card"
+                data-mood="excited">
+          <img class="mood-icon" src="images/excited.png">
+        </button>
+        <button type="button" 
+                class="mood-card"
+                data-mood="naughty">
+          <img class="mood-icon" src="images/naughty.png">
+        </button>
+        <button type="button" 
+                class="mood-card"
+                data-mood="mischievous">
+          <img class="mood-icon" src="images/mischievous.png">
         </button>
         <button type="button" 
                 class="mood-card"
                 data-mood="nerdy">
-          <img class="mood-icon" src="images/nerd-face.png">
-        </button>
-        <button type="button" 
-                class="mood-card"
-                data-mood="angry">
-          <img class="mood-icon" src="images/face-with-symbols-on-mouth.png">
+          <img class="mood-icon" src="images/nerdy.png">
         </button>
         <button type="button" 
                 class="mood-card"
                 data-mood="peaceful">
-          <img class="mood-icon" src="images/smiling-face-with-halo.png">
+          <img class="mood-icon" src="images/peaceful.png">
         </button>
         <button type="button" 
                 class="mood-card"
-                data-mood="cool">
-          <img class="mood-icon" src="images/smiling-face-with-sunglasses.png">
-        </button>
-        <button type="button" 
-                class="mood-card"
-                data-mood="emotional">
-          <img class="mood-icon" src="images/loudly-crying-face.png">
+                data-mood="despaired">
+          <img class="mood-icon" src="images/despaired.png">
         </button>
       </div>
 
