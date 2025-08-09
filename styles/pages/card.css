@@ -102,6 +102,7 @@ html, body {
   object-fit: contain;
 }
 
+/*
 .spotify-button::before {
   content: "";
   position: absolute;
@@ -126,6 +127,7 @@ html, body {
 .spotify-button::before { 
   will-change: opacity; 
 }
+*/
 
 .no-weather-date {
   margin-top: 1rem;
