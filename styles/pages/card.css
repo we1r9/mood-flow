@@ -1,15 +1,44 @@
+/*
+  "Open card" button style is based on design by Cksunandh
+  Source: https://uiverse.io/Cksunandh/stale-dog-84
+  Copyright (c) 2025 Cksunandh (Sunandh ck)
+
+  Licensed under the MIT License:
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
+*/
+
 html, body {
   height: 100%;
   margin: 0;
 }
 
-.app {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 75%;
+/* Fade-in эффект */
+.fade-in {
+  opacity: 0;
+  transition: opacity 1s ease;
 }
 
+.fade-in.visible {
+  opacity: 1;
+}
+
+/* Header */
 .header-middle {
   position: absolute;
   left: 50%;
@@ -18,133 +47,30 @@ html, body {
   transform: translateX(-50%);
 }
 
-.current-date-card{
-  font-weight: 500;
-  font-size: 1.12rem;
-  margin-top: 1.2rem;
-}
-
-.result-weather {
-  font-size: 1rem;
-  margin-bottom: 0.75rem;
-  padding: 0 1.5rem;
-}
-
-.cover {
-  height: 180px;
-  width: auto;
-  border-radius: 13px;
-  margin-bottom: 0.3rem;
-  box-shadow: 0 0 7px rgba(24, 23, 23, 0.1);
-}
-
-.result-title {
-  font-weight: 500;
-  padding: 0 1.5rem;
-}
-
-.result-artist {
-  margin-bottom: 0.4rem;
-  padding: 0 1.5rem;
-}
-
-.result-message {
-  margin-bottom: 0.8rem;
-  padding: 0 1.5rem;
-  text-align: center;
-}
-
-.result-card {
-  display: flex;
-  width: 280px;
-  margin: 0.5rem auto;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 0 20px rgba(24, 23, 23, 0.3);
-  border-radius: 33px;
-
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 1s ease;
-
-  will-change: opacity;          
-  backface-visibility: hidden;     
-}
-
-.result-card.visible {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.card-content {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  text-align: center;
-}
-
-.spotify-button {
+.go-back-button {
   all: unset;
-  position: relative;
-  display: inline-block;
-  cursor: pointer;
-  height: 40px;
-  margin-bottom: 1.6rem;
+  transition: transform 0.1s ease;
 }
 
-.spotify-icon {
-  position: relative;
-  z-index: 1;
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+.go-back-button:hover {
+  transform: scale(1.1);
 }
 
-/*
-.spotify-button::before {
-  content: "";
-  position: absolute;
-  top: 2px;
-  left: 5px;
+.arrow-back-icon {
   height: 35px;
-  right: 0;
-  background: rgb(30, 215, 96);
-  opacity: 0;
-  transition: opacity 0.2s ease;
+  width: auto;
 }
 
-.spotify-button:hover::before,
-.spotify-button:active::before {
-  opacity: 1;
-}
-
-.spotify-button { 
-  -webkit-tap-highlight-color: transparent; 
-}
-
-.spotify-button::before { 
-  will-change: opacity; 
-}
-*/
-
-.no-weather-date {
-  margin-top: 1rem;
-  margin-bottom: 0.7rem;
-}
-
-/* Button */
-
+/* Open card button */
 .btn-small {
   position: relative;
   padding: 0;
-  width: 100px; /* Smaller width */
-  height: 100px; /* Smaller height */
+  width: 100px;
+  height: 100px;
   border: 2px solid #888888;
   outline: none;
   background-color: #f4f5f6;
-  border-radius: 20px; /* Adjusted border-radius */
+  border-radius: 20px;
   box-shadow:
     -3px -10px 15px #ffffff,
     -3px -5px 8px #ffffff,
@@ -160,9 +86,8 @@ html, body {
   pointer-events: none; 
 }
 
-/* Hover animation: Scaling the button and adjusting shadow */
 .btn-small:hover {
-  transform: scale(1.1); /* Button grows slightly */
+  transform: scale(1.1);
   box-shadow:
     -3px -15px 20px #ffffff,
     -3px -10px 10px #ffffff,
@@ -170,16 +95,15 @@ html, body {
     5px 15px 15px rgba(0, 0, 0, 0.3);
 }
 
-/* Active click animation */
 .btn-small:active {
-  transform: scale(0.95); /* Button shrinks slightly */
-  box-shadow: none; /* Shadow disappears when clicked */
+  transform: scale(0.95);
+  box-shadow: none;
 }
 
 .btn-small-content {
   position: relative;
   display: grid;
-  padding: 10px; /* Smaller padding */
+  padding: 10px;
   width: 100%;
   height: 100%;
   grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -188,11 +112,10 @@ html, body {
     inset 0px -4px 0px #dddddd,
     0px -4px 0px #f4f5f6;
   border-radius: 20px;
-  transition: 0.3s ease-in-out; /* Smooth animation */
+  transition: 0.3s ease-in-out;
   z-index: 1;
 }
 
-/* Icon hover effect: Floating effect */
 .btn-small-icon {
   position: relative;
   display: flex;
@@ -200,34 +123,31 @@ html, body {
   grid-column: 4;
   align-self: start;
   justify-self: end;
-  width: 14px; /* Smaller icon size */
+  width: 14px;
   height: 14px;
-  transition: 0.3s ease-in-out; /* Smooth hover animation */
+  transition: 0.3s ease-in-out;
   margin-right: 12px;
 }
 
-/* Hover effect on icon */
 .btn-small:hover .btn-small-icon {
-  transform: translateY(-8px); /* Move the icon up slightly on hover */
+  transform: translateY(-8px);
 }
 
-/* Icon styling */
 .btn-small-icon svg {
-  width: 16px; /* Smaller icon */
+  width: 16px;
   height: 16px;
   fill: #aaaaaa;
 }
 
-/* Text hover effect: Floating effect */
 .btn-small-text {
   position: relative;
-  transform: translate3d(0px, -2px, 0px); /* Smaller translation */
+  transform: translate3d(0px, -2px, 0px);
   margin: 0;
   align-self: end;
   grid-column: 1 / 5;
   grid-row: 2;
   text-align: center;
-  font-size: 16px; /* Smaller font size */
+  font-size: 16px;
   background-color: #888888;
   color: transparent;
   text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
@@ -236,26 +156,25 @@ html, body {
   transition: 0.3s ease-in-out;
 }
 
-/* Hover effect on text */
 .btn-small:hover .btn-small-text {
-  transform: translateY(-5px); /* Move the text up slightly on hover */
+  transform: translateY(-5px);
 }
 
 .open-card-button {
-  position: fixed;
-  inset: 0;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  z-index: 10000;
-  pointer-events: none;
+  position: fixed;
+  inset: 0;
   transform: scale(1.3);
   transform-origin: center;
+  pointer-events: none;
+  z-index: 10000;
 }
 
 .open-card.hidden {
-  overflow: 0;
+  overflow: hidden;
   pointer-events: none;
   transition: opacity 0.3s;
 }
@@ -264,33 +183,7 @@ html, body {
   pointer-events: auto;
 }
 
-
-.fade-in {
-  opacity: 0;
-  transition: opacity 1s ease;
-}
-
-.fade-in.visible {
-  opacity: 1;
-}
-
-/* Go back button */
-
-.go-back-button {
-  all: unset;
-  transition: transform 0.1s ease;
-}
-
-.go-back-button:hover {
-  transform: scale(1.1);
-  transition: transform 0.1s ease;
-}
-
-.arrow-back-icon {
-  height: 35px;
-  width: auto;
-}
-
+/* Text hint */
 .hint {
   margin-top: 1.7rem;
   font-size: 1.2rem;
@@ -310,10 +203,105 @@ html, body {
 }
 
 @keyframes shine {
-  from {
-    background-position: 400% center;
-  }
-  to {
-    background-position: -400% center;
-  }
+  from { background-position: 400% center; }
+  to { background-position: -400% center; }
+}
+
+/* Card container */
+.app {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 75%;
+}
+
+/* Card */
+.result-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 280px;
+  margin: 0.5rem auto;
+  border-radius: 33px;
+  box-shadow: 0 0 20px rgba(24, 23, 23, 0.3);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1s ease;
+  will-change: opacity;          
+  backface-visibility: hidden;     
+}
+
+.result-card.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Card content */
+.card-content {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.current-date-card{
+  margin-top: 1.2rem;
+  font-size: 1.12rem;
+  font-weight: 500;
+}
+
+.result-weather {
+  padding: 0 1.5rem;
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+}
+
+.cover {
+  height: 180px;
+  width: auto;
+  margin-bottom: 0.3rem;
+  border-radius: 13px;
+  box-shadow: 0 0 7px rgba(24, 23, 23, 0.1);
+}
+
+.result-title {
+  padding: 0 1.5rem;
+  font-weight: 500;
+}
+
+.result-artist {
+  padding: 0 1.5rem;
+  margin-bottom: 0.4rem;
+}
+
+.result-message {
+  padding: 0 1.5rem;
+  margin-bottom: 0.8rem;
+  text-align: center;
+}
+
+/* Spotify button */
+.spotify-button {
+  all: unset;
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  height: 40px;
+  margin-bottom: 1.6rem;
+}
+
+.spotify-icon {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Когда погоды нет, изменяем отступы для даты */
+.no-weather-date {
+  margin-top: 1rem;
+  margin-bottom: 0.7rem;
 }

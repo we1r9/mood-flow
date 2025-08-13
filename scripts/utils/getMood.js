@@ -1,5 +1,6 @@
 import {moods} from "../../data/moods.js";
 
+// Находит объект настроения по ID
 export function getMood(moodId) {
   let matchingMood = null;
 

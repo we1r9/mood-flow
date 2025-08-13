@@ -6,20 +6,26 @@ import { getWeather } from './utils/getWeather.js';
 import { getCacheKey } from './utils/getCacheKey.js';
 import 'https://unpkg.com/dayjs@1.11.10/dayjs.min.js';
 
+// Инициализация страницы результата: 
+// парсим настроение 
+// загружаем город и погоду
+// кэшируем и рендерим карточку
 (async function init() {
-  // parse mood from URL query string
+  // Парсим настроение из URL и сохраняем
   const params = new URLSearchParams(window.location.search);
   const mood = params.get('mood');
 
-  // redirect back if missing or invalid
+  // Возвращаем назад, если с data-атрибутом что-то не так
   if (!mood) {
     window.location.href = 'index.html';
     return;
   }
 
-  // city display: if a city is cached in localStorage, show it, otherwise, show a loading state and trigger geolocation lookup
+  // Отображение города: показываем кэшированный город или лоадер во время загрузки города
   const locationElement = document.querySelector('.current-location');
   const cachedCity = localStorage.getItem('city');
+  if (!locationElement) return;
+
   const denied = localStorage.getItem('geoDenied') === 'true';
 
   if (cachedCity) {
@@ -27,6 +33,7 @@ import 'https://unpkg.com/dayjs@1.11.10/dayjs.min.js';
   } else if (denied) {
     locationElement.textContent = '';
   } else {
+    // Loader
     locationElement.innerHTML = `
       <div class="sk-flow">
         <div class="sk-flow-dot"></div>
@@ -35,42 +42,60 @@ import 'https://unpkg.com/dayjs@1.11.10/dayjs.min.js';
       </div>
     `;
 
+    // Триггерим вызов определения города после небольшой задержки
     setTimeout(() => {
       getCity().catch(() => {});
     }, 1000);
   }
 
-  // parse the cache-key and check cache
+  // Получаем кэшированный ключ для карточки
   const cacheKey = getCacheKey(mood);
+
+  // Пытаемся прочитать кэшированную карточку из sessionStorage
   const savedKey = sessionStorage.getItem(cacheKey);
+
   if (savedKey) {
     const { cardData, weatherData } = JSON.parse(savedKey);
     renderCard(cardData, weatherData, denied, cacheKey);
     return;
   } 
 
+  // Удаляем старый ключ для карточки
   sessionStorage.removeItem(cacheKey + '_opened');
 
-  // load current weather and store it in weatherData
-  const weatherData = await fetchWeatherData();
-
-  // generate card data
+  // Подготавливаем данные для карточки на основе настроения
   const cardData = prepareCardData(mood);
-
   if (!cardData) {
-    return window.location.href = 'index.html';
+    window.location.href = 'index.html';
+    return;
   }
 
-  // save data to sessionStorage
+  // Запрашиваем текущую погоду
+  const weatherData = await fetchWeatherData();
+
+  // Сохраняем данные в sessionStorage
   sessionStorage.setItem(cacheKey, JSON.stringify({
     cardData,
     weatherData
   }));
 
-  // render card itself
+  // Рендерим карточку
   renderCard(cardData, weatherData, denied, cacheKey);
 
-  // request current weather via getWeather() and return weatherData object
+  // Подготавливаем объект с данными для отображения в карточке, где moodId – идентификатор выбранного настроения 
+  function prepareCardData(moodId) {
+    const moodObject = getMood(moodId);
+    if(!moodObject) {
+      console.warn(`Mood "${moodId}" not found.`);
+      return null;
+    }
+    return { 
+      message: getRandomItem(moodObject.messages),
+      track: getRandomItem(moodObject.tracks)
+    };
+  }
+
+  // Запрашиваем текущую погоду и возвращаем объект с погодными данными
   async function fetchWeatherData() {
     if (!denied) {
       try {
@@ -81,7 +106,7 @@ import 'https://unpkg.com/dayjs@1.11.10/dayjs.min.js';
           observationTime 
         } = await getWeather();
 
-        // debug logs
+        // Отображаем в консоли
         console.log(`${temperatureCelsius} \u2103`, weatherDescription, weatherCode, observationTime);
 
         return { 
@@ -90,11 +115,9 @@ import 'https://unpkg.com/dayjs@1.11.10/dayjs.min.js';
           weatherCode, 
           observationTime 
         };
-
+        // При ошибке выводим ошибку в консоль и возвращаем путсые данные
       } catch (error) {
         console.error('Failed to load weather data:', error);
-
-        // return error values
         return {
           temperatureCelsius: null,
           weatherDescription: 'Unavailable',
@@ -111,26 +134,10 @@ import 'https://unpkg.com/dayjs@1.11.10/dayjs.min.js';
       };
     }
   }
-
-  // prepare the data needed to render the mood card
-  // moodId – identifier of the selected mood
-  function prepareCardData(moodId) {
-    const moodObject = getMood(moodId);
-    if(!moodObject) {
-      console.warn(`Mood "${moodId}" not found.`);
-      return null;
-    }
-
-    return { 
-      message: getRandomItem(moodObject.messages),
-      track: getRandomItem(moodObject.tracks)
-    };
-  }
 })();
 
-// render the mood result card into the DOM
+// Рендерим карточку в DOM
 function renderCard(cardData, weatherData, denied, cacheKey) {
-  // prepare data with sensible defaults 
   const today = dayjs().format('dddd, MMM D');
   const { 
     temperatureCelsius = 'N/A',
@@ -138,9 +145,10 @@ function renderCard(cardData, weatherData, denied, cacheKey) {
   } = weatherData;
   const { message, track } = cardData;
 
-  // render result card HTML with or without weather block based on geolocation permission
+  // HTML с блоком погоды или без него на основе разрешения пользователем доступа к геолокации
   if (!denied) {
-    // user allowed geolocation — show weather in result card
+    // Создаем HTML
+    // Пользователь разрешил геолокацию — показыаем погоду в карточке
     const html = `
       <div class="card-content">
         <div class="current-date-card">
@@ -170,7 +178,7 @@ function renderCard(cardData, weatherData, denied, cacheKey) {
         </div>
 
         <div>
-          <a href="${track.link}" target="_blank" rel="noopener">
+          <a href="${track.link}" target="_blank" rel="noopener noreferrer">
             <button class="spotify-button">
               <img 
                 class="spotify-icon" 
@@ -181,18 +189,22 @@ function renderCard(cardData, weatherData, denied, cacheKey) {
       </div>
     `;
 
+    // Вставляем HTML в контейнер
     const cardElement = document.querySelector('.result-card');
     cardElement.innerHTML = html;
 
     const openCardButton = document.querySelector('.open-card-button');
 
+    // Читаем открытое состояние карточки
     const opened = sessionStorage.getItem(cacheKey + '_opened') === 'true';
 
+    // Если карточка уже открыта
     if (opened) {
       cardElement.classList.add('visible');
       openCardButton.style.display = 'none';
     }
 
+    // Показывает карточку на странице и убирает кнопку открытия
     function openCard() {
       cardElement.classList.remove('visible');
       requestAnimationFrame(() => {
@@ -201,8 +213,11 @@ function renderCard(cardData, weatherData, denied, cacheKey) {
       openCardButton.style.display = 'none';
       sessionStorage.setItem(cacheKey + '_opened', true);
     }
+
+    // Открываем карточку при клике на кнопку
     openCardButton.addEventListener('click', openCard);
 
+    // Открываем карточку по кнопкe "Enter"
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Enter') {
         openCard();
@@ -210,7 +225,7 @@ function renderCard(cardData, weatherData, denied, cacheKey) {
     });
 
   } else {
-    // geolocation denied — render result card without weather
+    // Пользователь отклонил геолокацию — не показываем погоду в карточке
     const html = `
       <div class="card-content">
         <div class="current-date-card no-weather-date">
@@ -267,6 +282,7 @@ function renderCard(cardData, weatherData, denied, cacheKey) {
       openCardButton.style.display = 'none';
       sessionStorage.setItem(cacheKey + '_opened', true);
     }
+    
     openCardButton.addEventListener('click', openCard);
 
     document.addEventListener('keydown', (event) => {
