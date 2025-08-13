@@ -10,22 +10,25 @@
     <link rel="stylesheet" href="styles/pages/card.css">
   </head>
   <body>
+    <!-- Header: кнопка для возврата на главную страницу и местоположение (город) -->
     <header class="header">
       <div class="header-left fade-in">
         <a class="go-back" href="index.html">
-          <button type="button" class="go-back-button">
+          <button type="button" class="go-back-button" aria-label="Go back">
             <img class="arrow-back-icon" src="images/arrow-back.png">
           </button>
         </a>
       </div>
+
       <div class="header-middle fade-in">
-        <p class="current-location"></p>
+        <span class="current-location" aria-label="Current location"></span>
       </div>
     </header>
 
+    <!-- Кнопка открытия карточки и текстовая подсказка под кнопкой -->
     <div class="open-card-button fade-in">
       <div class="button-wrapper">
-        <button class="btn-small">
+        <button  type="button" class="btn-small" aria-label="Open card">
           <div class="btn-small-content">
             <div class="btn-small-icon">
               <img class="enter-key-icon" src="images/enter-key-icon.png">
@@ -37,19 +40,13 @@
       <h1 class="hint">Click or press Enter</h1>
     </div>
 
-    <div class="app">
+    <!-- Основной контейнер, в который рендерится содержимое карточки -->
+    <main class="app">
       <div class="result-card"></div>
-    </div>
+    </main>
 
+    <!-- Скрипты: логика создания карточки и fade-in эффект появления элементов -->
     <script type="module" src="scripts/result.js"></script>
-    <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        requestAnimationFrame(() => {
-          document.querySelectorAll('.fade-in').forEach(el => {
-            el.classList.add('visible');
-          });
-        });
-      });
-    </script>
+    <script type="module" src="scripts/utils/loading-effects.js"></script>
   </body>
 </html>

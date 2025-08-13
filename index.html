@@ -6,11 +6,14 @@
     <title>Mood Flow</title>
     <link rel="icon" href="images/favicon.png" type="image/png">
     <link rel="stylesheet" href="styles/pages/main.css">
-    <link rel="stylesheet" href="styles/pages/card.css">
     <link rel="stylesheet" href="styles/pages/modal-window.css">
     <link rel="stylesheet" href="styles/spinkit.min.css">
   </head>
   <body>
+    <!-- 
+    Preloader, который показывается во время загрузки страницы. 
+    Взят с https://github.com/tobiasahlin/SpinKit 
+    -->
     <div class="preloader">
       <div class="sk-chase">
         <div class="sk-chase-dot"></div>
@@ -22,69 +25,71 @@
       </div>
     </div>
 
+    <!-- Header: сегодняшняя дата, местоположение (город) и кнопка переключения отображения геолокации -->
     <header class="header">
       <div class="header-left fade-in">
-        <p class="current-date"></p>
+        <p class="current-date" aria-label="Current date"></p>
       </div>
+
       <div class="header-middle fade-in">
-        <p class="current-location"></p>
+        <p class="current-location" aria-label="Current location"></p>
       </div>
+      
       <div class="header-right fade-in">
-        <button type="button" class="change-geo-access-btn">
-          <img class="geo-icon" src="images/geo-icon.png">
+        <button type="button" class="change-geo-access-btn" aria-label="Toggle geolocation">
+          <img class="geo-icon" src="images/geo-icon.png" alt="Geolocation icon">
         </button>
       </div>
     </header>
     
+    <!-- Main: основной контейнер страницы, в который рендерится интерфейс выбора настроения -->
     <main class="content"></main>
     
+    <!-- Footer: версия приложения, ссылки на GitHub проекта и профиль -->
     <footer class="bar">
       <p class="version">v1.0.0</p>
 
       <div class="bar-middle">
-        <a href="https://github.com/we1r9/mood-flow" target="_blank" rel="noopener" class="project-link">
-          <p>Mood Flow</p>
+        <a
+        class="project-link"
+        href="https://github.com/we1r9/mood-flow"
+        target="_blank"
+        rel="noopener noreferrer">
+          <span>Mood Flow</span>
         </a>
       </div>
 
       <div class="bar-right"> 
-        <a href="https://github.com/we1r9" target="_blank" rel="noopener" class="github-link">
-          <img class="github-logo" src="images/github-logo.png">
+        <a 
+        class="github-link"
+        href="https://github.com/we1r9"
+        target="_blank"
+        rel="noopener noreferrer">
+          <img class="github-logo" src="images/github-logo.png" alt="GitHub logo">
         </a>
       </div>
     </footer>
 
-    <div class="modal hidden">
+    <!-- Modal window (по умолчанию скрыто): запрос на разрешение доступа к геолокации -->
+    <div class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-text">
       <div class="modal-content">
 
-        <h2 class="modal-title">Enable Location Access</h2>
-        <p class="modal-text">For a better experience, please enable location access. As a serverless website, we don't see or store your location data.</p>
+        <h2 class="modal-title" id="modal-title">
+          Enable Location Access
+        </h2>
+        <p class="modal-text" id="modal-text">
+          For a better experience, please enable location access. As a serverless website, we don't see or store your location data.
+        </p>
 
         <div class="modal-actions">
-          <button class="decline-button">Decline</button>
-          <button class="accept-button">Allow</button>
+          <button type="button" class="decline-button">Decline</button>
+          <button type="button" class="accept-button">Allow</button>
         </div>
       </div>
     </div>
 
+    <!-- Скрипты: основной функционал и эффекты загрузки (прелоадер и fade-in) -->
     <script type="module" src="scripts/main.js"></script>
-    <script type="module" src="scripts/utils/modal-window.js"></script>
-
-    <script>
-      window.addEventListener('load', () => {
-        const preloader = document.querySelector('.preloader');
-        preloader.classList.add('hide');
-      });
-    </script>
-    
-    <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        requestAnimationFrame(() => {
-          document.querySelectorAll('.fade-in').forEach(el => {
-            el.classList.add('visible');
-          });
-        });
-      });
-    </script>
+    <script type="module" src="scripts/utils/loading-effects.js"></script>
   </body>
 </html>

@@ -1,3 +1,4 @@
+// Справочник соответствия кода погоды и его описания (Open-Meteo)
 export const weatherCodeMap = {
   0: 'Sky is clear',
   1: 'Sky is mainly clear',
@@ -15,7 +16,7 @@ export const weatherCodeMap = {
 
   61: 'Fine rain',
   63: 'Mid-intensity rain',
-  65: 'Heavy showers',
+  65: 'Heavy rain',
 
   66: 'Freezing rain',
   67: 'Freezing rain',
@@ -26,7 +27,7 @@ export const weatherCodeMap = {
 
   77: 'Snow grains',
 
-  80: 'Brief rain',
+  80: 'Brief showers',
   81: 'Steady showers',
   82: 'Rainstorm',
 
@@ -38,7 +39,7 @@ export const weatherCodeMap = {
   97: 'Thunderstorm'
 };
 
-// returns weather description string based on numeric weather code
+// Возвращает человекочитаемое описание погоды по коду
 export function getWeatherDescription(code) {
   return weatherCodeMap[code] || 'Unknown weather';
 }

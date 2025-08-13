@@ -1,44 +1,46 @@
 const COORDS_KEY = 'cachedCoordinates';
 
-// returns Promise which resolves ({ latitude, longitude }) or rejects (reject(Error))
+// Возвращает Promise c объектом { latitude, longitude }
+// Если в localStorage есть координаты — берем их
+// Если нет — запрашиваем у браузера
+// При успехе — кэшируем в localStorage
+// При ошибке — отклоняем Promise
 export function getCoordinates() {
-  // try to get coordinates from localStorage if exists
+  // Пробуем достать координаты из localStorage
   const cached = localStorage.getItem(COORDS_KEY);
   if (cached) {
     try {
-
-      // parse and return Promise with coordinates
+      // Если данные корректны — возвращаем их в виде промиса
       return Promise.resolve(JSON.parse(cached));
     } catch {
+      // Если не удалось — удаляем результат
       localStorage.removeItem(COORDS_KEY);
     } 
   }
 
-  // otherwise make a request to browser to get coordinates
+  // Если данных нет в localStorage — запрашиваем у браузера
    return new Promise((resolve, reject) => {
-
-    // check geo support
+    // Проверяем поддержку геолокации
     if (!('geolocation' in navigator)) {
       reject(new Error('Geolocation not supported'));
       return;
     }
 
-    // make geo request
+    // Запрашиваем текущую геопозицию пользователя
     navigator.geolocation.getCurrentPosition(
 
-      // (onSuccess)
+      // Успех: сохраняем координаты в localStorage и возвращаем их
       (position) => {
         const coords = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude
         };
 
-        //save coordinates to localStorage
         localStorage.setItem(COORDS_KEY, JSON.stringify(coords));
         resolve(coords);
       },
 
-      // (onError)
+      // Ошибка: отклоняем Promise с объектом ошибки
       (error) => {
         reject(error);
       }
@@ -46,127 +48,127 @@ export function getCoordinates() {
   });
 }
 
-// find element to display result
+// Находим элемент для отображения
 const locationElement = document.querySelector('.current-location');
 
-// gets coordinates with getCoordinates, makes fetch request to Nominatim, updates the DOM and saves to localStorage
+// Определяет город по координатам через Nominatim и обновляет DOM
 export async function getCity() {
   try {
-    // сбрасываем флаг отказа перед новой попыткой
+    // Сбрасываем флаг отказа перед новой попыткой
     localStorage.setItem('geoDenied', 'false');
 
-    // waiting for coordinates
+    // Получаем координаты
     const { latitude, longitude } = await getCoordinates();
 
-    // prepare url for request to Nominatim (reverse-geocoding)
+    // Reverse-geocoding: готовим запрос к API Nominatim https://nominatim.openstreetmap.org/ui/search.html
     const url = `https://nominatim.openstreetmap.org/reverse?format=json&accept-language=en&lat=${latitude}&lon=${longitude}`;
 
-    // HTTP-request itself
+    // Отправляем HTTP-запрос и проверяем статус
     const response = await fetch(url);
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const data = await response.json();
 
-    // save short-circuit evaluation result
+    // Парсим JSON и собираем имя города
+    const data = await response.json();
     const city = data.address.city || data.address.town || data.address.village || 'Unknown';
 
-    // update DOM and save to localStorage
-    locationElement.textContent = city;
+    // Обновляем DOM и кэшируем
+    if (locationElement) locationElement.textContent = city;
     localStorage.setItem('city', city);
-
     console.log('City:', city);
 
-    // сбрасываем город для того, чтобы мы могли использовать его в цепочке .then()
+    // Возвращаем строку города
     return city;
 
   } catch (error) {
     console.error('Reverse-geocoding failed:', error);
 
-    // if user explicitly denied geolocation in browser prompt
-    if (error.code === 1) {
+    // Если пользователь явно запретил доступ к геолокации в браузере
+    if (error && error.code === 1) {
       localStorage.setItem('geoDenied', 'true');
     }
+
+    // Чистим отображение (если элемент есть), чтобы не висели старые данные
     locationElement.textContent = '';
 
-    // преобразовывыаем ошибку
+    //  Пробрасываем ошибку дальше
     throw error;
   }
 }
 
-// переключение доступа к гео
+// Переключает внутреннее состояние доступа к геолокации:
+// при включении — запускает getCity()
+// при выключении — ставит флаг отказа и чистит город
 export function toggleGeoAccess() {
-  // парсим состояние гео
+  // Читаем флаг отказа пользователя
   const denied = localStorage.getItem('geoDenied') === 'true';
 
   if (denied) {
-    // если пользователь ранее разрешил доступ к геолокации (или не запрещал), пробуем получить город — функция вернёт промис с названием города
+    // Ранее пользователь отказал — сейчас хочет включить
+    // Получаем город через getCity()
     return getCity();
   } else {
-    // если отказал — сохраняем в localStorage
+    // Пользователь не отказывал — выключаем показ города в UI
     localStorage.setItem('geoDenied', 'true');
     localStorage.removeItem('city');
     locationElement.textContent = '';
 
-    // возвращаем Promise, который ничего не делает, но позволяет продолжать работу с .then()
+    // Возвращаем Promise, который ничего не делает, но позволяет продолжать работу с .then()
     return Promise.resolve(null);
   }
 }
 
-// показываем подсказку, чтобы пользователь понимал, что нужно включить доступ к гео самому
+// Показываем подсказку, чтобы пользователь понимал, что нужно включить доступ к геолокации самому
 export function showEnableGeoHint() {
 
-  // создаем элемент
+  // Создаем HTML
   const toast = document.createElement('div');
   toast.className = 'geo-toast';
   toast.innerHTML = 'To display your city and local weather, please enable location access in your browser settings';
 
-  // добавляем элемент в конец html
+  // Добавляем элемент в конец html
   document.body.appendChild(toast);
 
+  // Делаем элемент видимым
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
       toast.classList.add('show');
     });
   });
 
-  // убираем через 3 секунды
+  // Убираем через 3 секунды
   setTimeout(() => {
     toast.classList.remove('show');
     toast.addEventListener('transitionend', () => toast.remove(), { once: true});
   }, 3500);
 }
 
-// попытка запроса к гео с учетом разрешений
+// Попытка запроса к геопозиции с учетом разрешений
 export async function tryRequestGeo() {
-
-  // проверяем поддержку Permissons API
+  // Проверяем поддержку Permissions API
   if (!navigator.permissions) {
-
-    // если не поддерживает — пробуем получить город
+    // Если не поддерживает — пробуем получить город
     return getCity().catch(error => {
-
-      // ошибка — проверяем, что это отказ в доступе и показываем подсказу
-      if (error.code === 1) showEnableGeoHint();
-      throw error; // пробрасываем ошибку дальше для последующей обработки
+      // Ошибка — проверяем, что это отказ в доступе и показываем подсказку
+      if (error && error.code === 1) showEnableGeoHint();
+      // Пробрасываем ошибку дальше для последующей обработки
+      throw error;
     });
   }
 
-  // если Permissions API доступен, запрашиваем статус разрешения на гео
+  // Если Permissions API доступен, запрашиваем статус разрешения на геопозицию
   const status = await navigator.permissions.query({ name: 'geolocation' });
 
   if (status.state === 'denied') {
     showEnableGeoHint();
-
-    // гео получить не удалось
-    return Promise.resolve(null);
+    // Геопозицию получить не удалось
+    return null;
   }
 
-  // пробуем получить город, если статус !== denied
+  // Пробуем получить город, если статус не denied
   return getCity().catch(error => {
-
-    // показываем подсказку, если юзер отказался
-    if (error.code === 1) showEnableGeoHint();
-
-    // пробрасываем ошибку
+    // Показываем подсказку, если юзер отказался
+    if (error && error.code === 1) showEnableGeoHint();
+    // Пробрасываем ошибку
     throw error;
   });
 }
