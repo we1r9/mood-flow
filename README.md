@@ -1,35 +1,55 @@
 # Mood Flow
 
-A web application that generates a personalized card with the current date, weather, a mood-based song and a short message based on your selected mood.
+[Веб-приложение](https://we1r9.github.io/mood-flow/), которое определяет настроение пользователя и создает на его основе персональную карточку с подходящим треком.
 
+## О проекте
 
-![Main screen](https://github.com/user-attachments/assets/53f44e68-ca0b-4f7d-9d38-9a5f76f05eb0)
-Main screen — select your mood
+Пользователь выбирает одно из шести настроений, приложение определяет его местоположение и текущую погоду, после чего генерирует карточку с подходящим треком и сообщением.
 
-![Result card](https://github.com/user-attachments/assets/33cfc4ee-9f48-4144-a0f4-f2f922444f93)
-Example of the generated card
+Можно использовать утром, чтобы начать день с музыкой под подходящий вайб ᶻ 𝗓 𐰁 .ᐟ
 
-## Live Demo
-🔗 [Open App](https://we1r9.github.io/mood-flow/)
+Личный проект для практики HTML, CSS и JavaScript.
 
-## Features
-- Displays the **current date**
-- Shows your **current location** (if permission is granted)
-- Fetches **live weather** based on your geolocation
-- Recommends a **mood-based song** with cover art, title and artist
-- Displays a **personalized message** matching your mood
-- Includes a **direct link** to listen on Spotify
+## Демо
 
-## Built With
-- [Nominatim](https://nominatim.org/) (OpenStreetMap) — reverse geocoding for location names
-- [Open-Meteo API](https://open-meteo.com/) — live weather data
-- [SpinKit](https://github.com/tobiasahlin/SpinKit) — CSS loading animations
-- [UIverse Button by Cksunandh](https://uiverse.io/Cksunandh/stale-dog-84) — base style for “Open card” button
-- [SF Pro Rounded](https://developer.apple.com/fonts/) — UI font
+![Главный экран](https://github.com/user-attachments/assets/53f44e68-ca0b-4f7d-9d38-9a5f76f05eb0)
+<p align="center">Главный экран – выбор настроения</p>
 
-## Roadmap
+![Карточка результата](https://github.com/user-attachments/assets/33cfc4ee-9f48-4144-a0f4-f2f922444f93)
+<p align="center">Пример созданной карточки</p>
 
-- **Playlist-based recommendations** — after learning backend development, generate cards using the user's own Spotify playlists (via Spotify API).
-- **Save & Share** — allow users to save the generated card as an image and share it on social media.
-- **Dark mode & UI improvements** — add a dark theme and refine the user interface for better aesthetics.
-- **Daily card history** — keep a history of generated cards so users can look back at their moods.
+## Стек
+
+![HTML](https://img.shields.io/badge/HTML-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![CSS](https://img.shields.io/badge/CSS-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![OpenStreetMap](https://img.shields.io/badge/Nominatim-7EBC6F?style=for-the-badge&logo=openstreetmap&logoColor=white)
+![Open-Meteo](https://img.shields.io/badge/Open--Meteo-00BFFF?style=for-the-badge&logo=cloudflare&logoColor=white)
+
+## Установка и запуск
+
+1. Клонируйте репозиторий:
+
+```bash
+git clone https://github.com/we1r9/mood-flow.git
+cd mood-flow
+```
+
+2. Откройте `index.html` через [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer).
+
+## Технические подробности
+
+- Приложение проверяет разрешение на геолокацию через Permissions API перед запросом координат. Для определения города используется [Nominatim](https://nominatim.org/) от OpenStreetMap.
+
+- Погода запрашивается у [Open-Meteo API](https://open-meteo.com/). Код погоды переводится в текстовое описание через локальный справочник.
+
+## Планы
+
+- **Spotify API** – рекомендации на основе реальных плейлистов пользователя
+- **Шаринг** – возможность делиться карточками в социальных сетях
+- **История карточек** – личный кабинет с карточками прошлых дней
+
+## Контакты
+
+- Telegram: [@we1r9](https://t.me/we1r9)
+- Email: provatorovandrew@gmail.com
