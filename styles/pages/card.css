@@ -28,7 +28,6 @@ html, body {
   margin: 0;
 }
 
-/* Fade-in эффект */
 .fade-in {
   opacity: 0;
   transition: opacity 1s ease;
@@ -38,7 +37,6 @@ html, body {
   opacity: 1;
 }
 
-/* Header */
 .header-middle {
   position: absolute;
   left: 50%;
@@ -49,6 +47,8 @@ html, body {
 
 .go-back-button {
   all: unset;
+  display: inline-block;
+  cursor: pointer;
   transition: transform 0.1s ease;
 }
 
@@ -61,7 +61,6 @@ html, body {
   width: auto;
 }
 
-/* Open card button */
 .btn-small {
   position: relative;
   padding: 0;
@@ -160,6 +159,10 @@ html, body {
   transform: translateY(-5px);
 }
 
+.open-card-button.hidden {
+  display: none;
+}
+
 .open-card-button {
   display: flex;
   justify-content: center;
@@ -183,10 +186,10 @@ html, body {
   pointer-events: auto;
 }
 
-/* Text hint */
 .hint {
   margin-top: 1.7rem;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
+  font-weight: 500;
   background: linear-gradient(
     90deg,
     #000 0%,
@@ -207,7 +210,6 @@ html, body {
   to { background-position: -400% center; }
 }
 
-/* Card container */
 .app {
   display: flex;
   justify-content: center;
@@ -215,7 +217,6 @@ html, body {
   height: 75%;
 }
 
-/* Card */
 .result-card {
   display: flex;
   flex-direction: column;
@@ -237,7 +238,6 @@ html, body {
   pointer-events: auto;
 }
 
-/* Card content */
 .card-content {
   display: flex;
   align-items: center;
@@ -281,7 +281,6 @@ html, body {
   text-align: center;
 }
 
-/* Spotify button */
 .spotify-button {
   all: unset;
   position: relative;
@@ -300,7 +299,6 @@ html, body {
   object-fit: contain;
 }
 
-/* Когда погоды нет, изменяем отступы для даты */
 .no-weather-date {
   margin-top: 1rem;
   margin-bottom: 0.7rem;

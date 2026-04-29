@@ -1,52 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mood Card</title>
-    <link rel="icon" href="images/favicon.png" type="image/png">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
-    <link rel="stylesheet" href="styles/pages/main.css">
-    <link rel="stylesheet" href="styles/pages/card.css">
-  </head>
-  <body>
-    <!-- Header: кнопка для возврата на главную страницу и местоположение (город) -->
-    <header class="header">
-      <div class="header-left fade-in">
-        <a class="go-back" href="index.html">
-          <button type="button" class="go-back-button" aria-label="Go back">
-            <img class="arrow-back-icon" src="images/arrow-back.png">
-          </button>
-        </a>
-      </div>
 
-      <div class="header-middle fade-in">
-        <span class="current-location" aria-label="Current location"></span>
-      </div>
-    </header>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mood Card</title>
+  <link rel="icon" href="images/favicon.png" type="image/png">
+  <link rel="stylesheet" href="styles/pages/main.css">
+  <link rel="stylesheet" href="styles/pages/card.css">
+</head>
 
-    <!-- Кнопка открытия карточки и текстовая подсказка под кнопкой -->
-    <div class="open-card-button fade-in">
-      <div class="button-wrapper">
-        <button  type="button" class="btn-small" aria-label="Open card">
-          <div class="btn-small-content">
-            <div class="btn-small-icon">
-              <img class="enter-key-icon" src="images/enter-key-icon.png">
-            </div>
-            <p class="btn-small-text">open card</p>
-          </div>
-        </button>
-      </div>
-      <h1 class="hint">Click or press Enter</h1>
+<body>
+  <header class="header">
+    <div class="header-left fade-in">
+      <a class="go-back-button" href="index.html" aria-label="Go back">
+        <img class="arrow-back-icon" src="images/arrow-back.png" alt="">
+      </a>
     </div>
 
-    <!-- Основной контейнер, в который рендерится содержимое карточки -->
-    <main class="app">
-      <div class="result-card"></div>
-    </main>
+    <div class="header-middle fade-in">
+      <span class="current-location" aria-label="Current location"></span>
+    </div>
+  </header>
 
-    <!-- Скрипты: логика создания карточки и fade-in эффект появления элементов -->
-    <script type="module" src="scripts/result.js"></script>
-    <script type="module" src="scripts/utils/loading-effects.js"></script>
-  </body>
+  <div class="open-card-button fade-in">
+    <div class="button-wrapper">
+      <button type="button" class="btn-small" aria-label="Open card">
+        <div class="btn-small-content">
+          <div class="btn-small-icon">
+            <img class="enter-key-icon" src="images/enter-key-icon.png" alt="">
+          </div>
+          <p class="btn-small-text">open card</p>
+        </div>
+      </button>
+    </div>
+    <p class="hint">Click or press Enter</p>
+  </div>
+
+  <main class="app">
+    <div class="result-card"></div>
+  </main>
+
+  <script type="module" src="scripts/result.js"></script>
+  <script type="module" src="scripts/utils/loading-effects.js"></script>
+</body>
+
 </html>

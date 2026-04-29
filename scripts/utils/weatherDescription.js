@@ -1,4 +1,3 @@
-// Справочник соответствия кода погоды и его описания (Open-Meteo)
 export const weatherCodeMap = {
   0: 'Sky is clear',
   1: 'Sky is mainly clear',
@@ -39,7 +38,6 @@ export const weatherCodeMap = {
   97: 'Thunderstorm'
 };
 
-// Возвращает человекочитаемое описание погоды по коду
 export function getWeatherDescription(code) {
   return weatherCodeMap[code] || 'Unknown weather';
 }

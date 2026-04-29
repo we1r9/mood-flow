@@ -1,4 +1,3 @@
-// Preloader
 window.addEventListener('load', () => {
   const preloader = document.querySelector('.preloader');
   if (preloader) {
@@ -6,7 +5,6 @@ window.addEventListener('load', () => {
   }
 });
 
-// Fade-in
 document.addEventListener('DOMContentLoaded', () => {
   requestAnimationFrame(() => {
     document.querySelectorAll('.fade-in').forEach(el => {
